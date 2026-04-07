@@ -2,7 +2,7 @@ import { SERVICES, UI_TEXT } from '../constants';
 
 const Services = () => {
     return (
-        <section id="services" className="py-24 px-6 relative bg-white dark:bg-gray-900 transition-colors duration-200 overflow-hidden section-reveal">
+        <section id="services" className="pt-32 pb-24 px-6 min-h-[calc(100vh-100px)] relative bg-white dark:bg-gray-900 transition-colors duration-200 overflow-hidden section-reveal">
             {/* 🌋 Unique Background Aura */}
             <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-amber-500/[0.03] dark:bg-amber-500/[0.02] blur-[150px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
 

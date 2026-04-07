@@ -3,7 +3,7 @@ import { PROJECTS, PERSONAL_INFO, UI_TEXT } from '../constants';
 
 const Projects = () => {
     return (
-        <section id="projects" className="py-24 px-6 relative bg-white dark:bg-[#030712] transition-colors duration-200 overflow-hidden section-reveal">
+        <section id="projects" className="pt-32 pb-24 px-6 min-h-[calc(100vh-100px)] relative bg-white dark:bg-[#030712] transition-colors duration-200 overflow-hidden section-reveal">
             {/* Background Accent */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-amber-500/5 dark:bg-amber-500/[0.03] blur-[150px] rounded-full pointer-events-none"></div>
 

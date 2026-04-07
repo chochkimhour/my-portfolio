@@ -2,7 +2,7 @@ import { SKILLS, PERSONAL_INFO, UI_TEXT } from '../constants';
 
 const About = () => {
     return (
-        <section id="about" className="py-24 px-6 relative bg-white dark:bg-amber-950/10 border-y border-gray-100 dark:border-gray-800/50 transition-colors duration-200 overflow-hidden section-reveal">
+        <section id="about" className="pt-32 pb-24 px-6 min-h-[calc(100vh-100px)] relative bg-white dark:bg-amber-950/10 border-y border-gray-100 dark:border-gray-800/50 transition-colors duration-200 overflow-hidden section-reveal">
             {/* Background Blob Decorations */}
             <div className="absolute top-1/2 left-0 w-[600px] h-[600px] bg-amber-500/5 dark:bg-amber-500/5 blur-[120px] rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
             <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-amber-600/5 dark:bg-amber-600/5 blur-[100px] rounded-full translate-x-1/3 translate-y-1/3 pointer-events-none"></div>

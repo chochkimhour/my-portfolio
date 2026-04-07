@@ -1,10 +1,10 @@
 export const NAV_LINKS = [
-    { name: "Home", href: "#home" },
-    { name: "About", href: "#about" },
-    { name: "Services", href: "#services" },
-    { name: "Experience", href: "#experience" },
-    { name: "Projects", href: "#projects" },
-    { name: "Contact", href: "#contact" },
+    { name: "Home", href: "/" },
+    { name: "About", href: "/about" },
+    { name: "Services", href: "/services" },
+    { name: "Experience", href: "/experience" },
+    { name: "Projects", href: "/projects" },
+    { name: "Contact", href: "/contact" },
 ];
 
 export const SKILLS = {
@@ -45,20 +45,20 @@ export const PROJECTS = [
 ];
 
 export const PERSONAL_INFO = {
-    name: import.meta.env.VITE_USER_NAME,
-    role: import.meta.env.VITE_USER_ROLE,
+    name: import.meta.env.USER_NAME,
+    role: import.meta.env.USER_ROLE,
     roles: ["Backend Engineer"],
-    email: import.meta.env.VITE_USER_EMAIL,
-    phone: import.meta.env.VITE_USER_PHONE,
-    location: import.meta.env.VITE_USER_LOCATION,
-    gitlabUrl: import.meta.env.VITE_GITLAB_URL,
-    linkedinUrl: import.meta.env.VITE_LINKEDIN_URL,
-    telegramUrl: import.meta.env.VITE_TELEGRAM_URL,
-    telegramUsername: import.meta.env.VITE_TELEGRAM_USERNAME,
-    tagline: import.meta.env.VITE_TAGLINE,
-    brandDescription: import.meta.env.VITE_BRAND_DESCRIPTION,
-    aboutP1: import.meta.env.VITE_ABOUT_P1,
-    aboutP2: import.meta.env.VITE_ABOUT_P2,
+    email: import.meta.env.USER_EMAIL,
+    phone: import.meta.env.USER_PHONE,
+    location: import.meta.env.USER_LOCATION,
+    gitlabUrl: import.meta.env.GITLAB_URL,
+    linkedinUrl: import.meta.env.LINKEDIN_URL,
+    telegramUrl: import.meta.env.TELEGRAM_URL,
+    telegramUsername: import.meta.env.TELEGRAM_USERNAME,
+    tagline: import.meta.env.TAGLINE,
+    brandDescription: import.meta.env.BRAND_DESCRIPTION,
+    aboutP1: import.meta.env.ABOUT_P1,
+    aboutP2: import.meta.env.ABOUT_P2,
     expertise: ["Web Apps", "UI/UX Design", "Performance", "Cloud Architecture", "Mobile First", "Scalable APIs"],
     stats: [
         { label: "Years Exp.", value: "2+" },

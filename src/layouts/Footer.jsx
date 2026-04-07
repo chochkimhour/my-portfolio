@@ -8,7 +8,7 @@ const Footer = () => {
     ];
 
     return (
-        <footer className="relative bg-gray-50 dark:bg-[#060b1a] transition-colors duration-500 py-12 overflow-hidden border-t border-gray-100 dark:border-white/5">
+        <footer className="relative bg-gray-50 dark:bg-[#060b1a] transition-colors duration-500 pt-16 pb-12 overflow-hidden border-t border-gray-100 dark:border-white/5">
             <div className="max-w-7xl mx-auto px-6 relative z-10">
                 <div className="flex flex-col items-center justify-center text-center gap-8">
 

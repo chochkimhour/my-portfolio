@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { NAV_LINKS, PERSONAL_INFO } from '../constants';
 
 const Navbar = ({ darkMode, setDarkMode }) => {
     const [isOpen, setIsOpen] = useState(false);
-
-    const [activeSection, setActiveSection] = useState('Home');
+    const location = useLocation();
 
     const updateTitle = (name) => {
         document.title = `${PERSONAL_INFO.name} | ${name}`;
-        setActiveSection(name);
     };
 
     const [scrollProgress, setScrollProgress] = useState(0);
@@ -31,33 +30,8 @@ const Navbar = ({ darkMode, setDarkMode }) => {
         const handleScrollState = () => setIsScrolled(window.scrollY > 20);
         window.addEventListener('scroll', handleScrollState);
 
-        const observerOptions = {
-            root: null,
-            rootMargin: '-40% 0px -40% 0px',
-            threshold: 0
-        };
-
-        const handleIntersect = (entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    const id = entry.target.id;
-                    const link = NAV_LINKS.find((l) => l.href === `#${id}`);
-                    if (link) setActiveSection(link.name);
-                }
-            });
-        };
-
-        const observer = new IntersectionObserver(handleIntersect, observerOptions);
-
-        NAV_LINKS.forEach((link) => {
-            const sectionId = link.href.replace('#', '');
-            const section = document.getElementById(sectionId);
-            if (section) observer.observe(section);
-        });
-
         return () => {
             window.removeEventListener('scroll', handleScrollState);
-            observer.disconnect();
         };
     }, []);
 
@@ -70,8 +44,8 @@ const Navbar = ({ darkMode, setDarkMode }) => {
 
                 {/* LOGO & STATUS */}
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 group">
-                    <a
-                        href="#home"
+                    <Link
+                        to="/"
                         onClick={() => {
                             updateTitle('Home');
                             setIsOpen(false);
@@ -81,26 +55,29 @@ const Navbar = ({ darkMode, setDarkMode }) => {
                         <span className="mr-3 inline-flex items-center justify-center w-10 h-10 rounded-full bg-amber-600/10 dark:bg-white/10 border border-amber-600/20 dark:border-white/20 shadow-inner group-hover:scale-110 transition-all duration-300">
                             <span className="animate-coding">🧑‍💻</span>
                         </span> {PERSONAL_INFO.name}
-                    </a>
+                    </Link>
                 </div>
 
                 {/* DESKTOP MENU */}
                 <div className="hidden lg:flex space-x-8 text-white/90 font-bold items-center">
-                    {NAV_LINKS.map((link) => (
-                        <a
-                            key={link.name}
-                            href={link.href}
-                            onClick={() => {
-                                updateTitle(link.name);
-                            }}
-                            className={`relative group py-1 text-[11px] uppercase font-bold tracking-[0.2em] transition-all ${activeSection === link.name 
-                                ? 'text-amber-600 dark:text-amber-400' 
-                                : 'text-gray-600 dark:text-gray-400 hover:text-amber-600 dark:hover:text-amber-400'}`}
-                        >
-                            {link.name}
-                            <span className={`absolute -bottom-1.5 left-0 h-[2px] bg-amber-600 dark:bg-amber-400 transition-all duration-300 ${activeSection === link.name ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
-                        </a>
-                    ))}
+                    {NAV_LINKS.map((link) => {
+                        const isActive = location.pathname === link.href;
+                        return (
+                            <Link
+                                key={link.name}
+                                to={link.href}
+                                onClick={() => {
+                                    updateTitle(link.name);
+                                }}
+                                className={`relative group py-1 text-[11px] uppercase font-bold tracking-[0.2em] transition-all ${isActive 
+                                    ? 'text-amber-600 dark:text-amber-400' 
+                                    : 'text-gray-600 dark:text-gray-400 hover:text-amber-600 dark:hover:text-amber-400'}`}
+                            >
+                                {link.name}
+                                <span className={`absolute -bottom-1.5 left-0 h-[2px] bg-amber-600 dark:bg-amber-400 transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
+                            </Link>
+                        );
+                    })}
                     {/* DESKTOP THEME SWITCH */}
                     <button
                         onClick={() => setDarkMode(!darkMode)}
@@ -148,22 +125,25 @@ const Navbar = ({ darkMode, setDarkMode }) => {
             <div className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out border-gray-200/50 dark:border-white/5 ${isOpen ? 'max-h-[500px] border-t opacity-100' : 'max-h-0 border-t-0 opacity-0'
                 }`}>
                 <div className="bg-white/95 dark:bg-[#030712]/95 backdrop-blur-2xl py-6 px-6 flex flex-col space-y-2">
-                    {NAV_LINKS.map((link) => (
-                        <a
-                            key={link.name}
-                            href={link.href}
-                            className={`font-bold py-3 px-4 rounded-xl transition-all ${activeSection === link.name
-                                ? 'bg-amber-600 text-white shadow-lg'
-                                : 'text-gray-700 dark:text-gray-300 hover:bg-amber-50 dark:hover:bg-amber-900/20 hover:text-amber-600 dark:hover:text-amber-400'
-                                }`}
-                            onClick={() => {
-                                updateTitle(link.name);
-                                setIsOpen(false);
-                            }}
-                        >
-                            {link.name}
-                        </a>
-                    ))}
+                    {NAV_LINKS.map((link) => {
+                        const isActive = location.pathname === link.href;
+                        return (
+                            <Link
+                                key={link.name}
+                                to={link.href}
+                                className={`font-bold py-3 px-4 rounded-xl transition-all ${isActive
+                                    ? 'bg-amber-600 text-white shadow-lg'
+                                    : 'text-gray-700 dark:text-gray-300 hover:bg-amber-50 dark:hover:bg-amber-900/20 hover:text-amber-600 dark:hover:text-amber-400'
+                                    }`}
+                                onClick={() => {
+                                    updateTitle(link.name);
+                                    setIsOpen(false);
+                                }}
+                            >
+                                {link.name}
+                            </Link>
+                        );
+                    })}
                 </div>
             </div>
 

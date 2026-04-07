@@ -25,7 +25,7 @@ const formatPeriod = (startStr, endStr) => {
 
 const Experience = () => {
     return (
-        <section id="experience" className="py-24 px-6 bg-gray-50 dark:bg-gray-800/20 border-y border-gray-100 dark:border-gray-800/50 transition-colors duration-200 section-reveal">
+        <section id="experience" className="pt-32 pb-24 px-6 min-h-[calc(100vh-100px)] bg-gray-50 dark:bg-gray-800/20 border-y border-gray-100 dark:border-gray-800/50 transition-colors duration-200 section-reveal">
             <div className="max-w-[1920px] mx-auto px-6 sm:px-16">
                 <div className="text-center mb-20 animate-fade-in-up">
                     <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4">

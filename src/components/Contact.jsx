@@ -2,7 +2,7 @@ import { PERSONAL_INFO, UI_TEXT } from '../constants';
 
 const Contact = () => {
     return (
-        <section id="contact" className="py-32 px-6 relative bg-white dark:bg-[#030712] transition-colors duration-500 overflow-hidden section-reveal">
+        <section id="contact" className="py-32 px-6 min-h-[calc(100vh-100px)] relative bg-white dark:bg-[#030712] transition-colors duration-500 overflow-hidden section-reveal">
             {/* 🌌 Animated Background Accents */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                 <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-amber-500/10 dark:bg-amber-500/5 blur-[120px] rounded-full animate-float" style={{ animationDelay: '0s' }}></div>
