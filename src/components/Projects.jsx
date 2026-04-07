@@ -1,0 +1,64 @@
+import React from 'react';
+import { PROJECTS, PERSONAL_INFO, UI_TEXT } from '../constants';
+
+const Projects = () => {
+    return (
+        <section id="projects" className="py-24 px-6 relative bg-white dark:bg-[#030712] transition-colors duration-200 overflow-hidden section-reveal">
+            {/* Background Accent */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-amber-500/5 dark:bg-amber-500/[0.03] blur-[150px] rounded-full pointer-events-none"></div>
+
+            <div className="max-w-[1920px] mx-auto px-6 sm:px-16 relative z-10">
+                <div className="text-center mb-16">
+                    <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4">
+                        {UI_TEXT.projects.title} <span className="text-amber-600 dark:text-amber-400">{UI_TEXT.projects.highlight}</span>
+                    </h2>
+                    <div className="w-24 h-1.5 bg-amber-600 dark:bg-amber-400 mx-auto rounded-full"></div>
+                    <p className="mt-6 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                        {UI_TEXT.projects.description}
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
+                    {PROJECTS.map((project) => (
+                        <div key={project.id} className="group modern-card overflow-hidden hover:shadow-2xl hover:border-amber-500/30 transition-all duration-300 hover:-translate-y-2 flex flex-col">
+
+                            {/* Color Header Strip (Minimalist) */}
+                            <div className={`h-6 w-full bg-gradient-to-r ${project.imageGradient}`}></div>
+
+                            {/* Project Content */}
+                            <div className="p-8 flex flex-col flex-grow">
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{project.title}</h3>
+                                <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-8 flex-grow italic">
+                                    {project.description}
+                                </p>
+                                <div className="flex flex-wrap gap-2 mt-auto">
+                                    {project.tech.map((tag) => (
+                                        <span key={tag} className="text-[10px] font-bold px-2 py-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-md border border-amber-500/10">
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Simplified GitLab Link */}
+                <div className="mt-16 text-center">
+                    <a
+                        href={PERSONAL_INFO.gitlabUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 group text-gray-900 dark:text-white font-bold hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-300"
+                    >
+                        <svg className="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" fill="currentColor" viewBox="0 0 24 24"><path d="M22.65 14.39L12 22.13 1.35 14.39a.84.84 0 0 1-.3-.94l1.22-3.78 2.44-7.51A.42.42 0 0 1 4.82 2a.43.43 0 0 1 .58 0 .42.42 0 0 1 .11.18l2.44 7.49h8.1l2.44-7.49A.42.42 0 0 1 18.6 2a.43.43 0 0 1 .58 0 .42.42 0 0 1 .11.18l2.44 7.51L23 13.45a.84.84 0 0 1-.35.94z"></path></svg>
+                        <span className="relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-px after:bg-amber-500 after:transition-all group-hover:after:w-full">{UI_TEXT.projects.view_more}</span>
+                        <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export default Projects;

@@ -1,0 +1,167 @@
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #f59e0b;
+  --font-sans: "Nunito", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+@keyframes text-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-text-gradient {
+  background-size: 200% auto;
+  animation: text-gradient 3s linear infinite;
+}
+
+@keyframes fade-in-up {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(30px); filter: blur(5px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+.section-reveal {
+  animation: reveal linear forwards;
+  animation-timeline: view();
+  animation-range: entry 10% cover 30%;
+}
+
+@keyframes wave {
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(-10deg); }
+  45% { transform: rotate(8deg); }
+  75% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.animate-wave {
+  animation: wave 4s cubic-bezier(0.36, 0.2, 0.64, 0.82) infinite;
+  transform-origin: bottom center;
+  transform-box: fill-box;
+}
+
+/* 🎨 Global Theme & Accessibility */
+body {
+  @apply bg-white text-gray-900 transition-colors duration-500 overflow-x-hidden;
+}
+
+.dark body {
+  @apply bg-[#030712] text-white;
+}
+
+::selection {
+  background-color: #f59e0b;
+  color: white;
+}
+
+/* 🧬 Ultra-Modern CSS Utilities */
+@utility glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+@utility dark-glass {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 🏢 Standardized Premium Cards */
+@utility modern-card {
+  @apply bg-white dark:bg-[#0f172a]/40 backdrop-blur-sm border border-gray-200 dark:border-white/15 shadow-[0_10px_40px_rgba(0,0,0,0.06)] dark:shadow-none transition-all duration-500 rounded-[2.5rem] sm:rounded-[3rem];
+}
+
+/* 🎨 Modern Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 20px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #f59e0b;
+}
+
+/* 🌫️ Premium Subtle Grain Effect */
+body::before {
+  content: "";
+  position: fixed;
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity: 0.05;
+  z-index: 9999;
+  pointer-events: none;
+  animation: grain 8s steps(10) infinite;
+}
+@keyframes grain {
+  0%, 100% { transform:translate(0, 0) }
+  10% { transform:translate(-5%, -10%) }
+  20% { transform:translate(-15%, 5%) }
+  30% { transform:translate(7%, -25%) }
+  40% { transform:translate(-5%, 25%) }
+  50% { transform:translate(-15%, 10%) }
+  60% { transform:translate(15%, 0) }
+  70% { transform:translate(0, 15%) }
+  80% { transform:translate(3%, 35%) }
+  90% { transform:translate(-10%, 10%) }
+}
+
+@keyframes coding {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-2px) rotate(-5deg); }
+  75% { transform: translateY(1px) rotate(5deg); }
+}
+
+.animate-coding {
+  display: inline-block;
+  animation: coding 2s ease-in-out infinite;
+}
+
+/* ⚡ Smooth Reveal Utility */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-on-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}

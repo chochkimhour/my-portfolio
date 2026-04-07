@@ -1,0 +1,14 @@
+services:
+  app:
+    build: .
+    container_name: my-portfolio
+    ports:
+      - "5173:5173"
+    volumes:
+      # Mount the current directory to /app in the container to enable hot-reloading
+      - .:/app
+      # Ignore node_modules from the host to use the container's node_modules
+      - /app/node_modules
+    environment:
+      # Some environments need this for Vite's file watching to work inside Docker
+      - CHOKIDAR_USEPOLLING=true
