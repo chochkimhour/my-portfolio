@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, memo } from 'react';
+import React, { useEffect, useRef, memo } from 'react';
 import { UI_TEXT } from '../constants';
 
 const FloatingRobot = memo(() => {

@@ -1,93 +1,175 @@
-# ✨ Choch Kimhour - Professional Portfolio
+# Choch Kimhour Portfolio
 
-<p align="center">
-  <img src="https://img.shields.io/badge/React-19.0-blue?style=for-the-badge&logo=react" alt="React" />
-  <img src="https://img.shields.io/badge/Tailwind--CSS-v4.0-38bdf8?style=for-the-badge&logo=tailwind-css" alt="Tailwind CSS" />
-  <img src="https://img.shields.io/badge/Vite-6.0-646cff?style=for-the-badge&logo=vite" alt="Vite" />
-  <img src="https://img.shields.io/badge/Docker-24.0-2496ED?style=for-the-badge&logo=docker" alt="Docker" />
-</p>
+A production-ready personal portfolio website for Choch Kimhour, built with React, Vite, Tailwind CSS, and Docker. The application presents professional experience, services, featured projects, contact links, and a small interactive portfolio assistant.
 
-## 🕶️ Overview
-Welcome to the professional portfolio of **Choch Kimhour**, a specialized Software Engineer based in Cambodia. This site is crafted to bridge the gap between elegant minimalist design and technical excellence, providing a high-fidelity experience across all modern devices.
+## Overview
 
-**Live Link:** [Coming Soon](#)
+This project is designed as a fast, responsive, and maintainable portfolio application. It uses environment-based profile configuration so personal details, contact information, and branding content can be managed without changing the component code.
 
----
+## Features
 
-## 🎨 Design Philosophy
-- **Rich Aesthetics:** Uses a sophisticated **Amber-500** primary brand color paired with charcoal grays for a clean, premium "dark-mode-first" feel.
-- **Full HD Optimized:** Specifically designed to scale beautifully from smartphone screens up to **1920px (FHD)** wide monitors.
-- **Micro-Interactions:** Custom-built smooth scrolling, glassmorphism navbars, and animated hover effects that make the site feel "alive."
+- Responsive single-page portfolio experience
+- Professional sections for hero, about, services, experience, projects, and contact
+- Environment-driven personal information and social links
+- Interactive portfolio assistant component
+- Light and dark theme support
+- Vite development server with fast refresh
+- Docker and Docker Compose support for local development
 
----
+## Tech Stack
 
-## 🚀 Core Features
-- **✨ Dynamic Hero:** High-impact introduction with an animated typing effect and staggered card-based image presentation.
-- **💼 Professional Services:** High-fidelity cards outlining expertise in Frontend, Backend, and UI/UX Design Strategy.
-- **🏆 Experience Timeline:** A premium vertical roadmap showcasing career progression and senior-level impact.
-- **🛠️ Project Grid:** Curated showcase of top works with custom-styled tech stack badges and live demo links.
-- **🌓 Animated Theme Switch:** A custom-built, pill-style toggle for switching between Light and Dark modes with embedded icons.
-- **🌫️ Scroll-Aware Blur:** Advanced glassmorphism navbar that transitions opacity and blur as you explore the page.
-- **📈 Real-time Progress:** A subtle, amber-gradient scroll progress bar at the top of the viewport.
+- React 19
+- React Router
+- Tailwind CSS 4
+- Vite
+- ESLint
+- Docker
 
----
+## Requirements
 
-## 💻 Tech Stack
-- **Library:** [React 19](https://react.dev/)
-- **Styling:** [Tailwind CSS v4](https://tailwindcss.com/) (Next-Gen CSS framework)
-- **Tooling:** [Vite](https://vitejs.dev/) (High-performance build tool)
-- **Containerization:** [Docker](https://www.docker.com/) & Docker Compose
-- **Deployment:** Vercel / Netlify / GitHub Pages
+Use one of the following setups:
 
----
+- Node.js 20 or later with npm
+- Docker and Docker Compose
 
-## 🛠️ Setup & Installation (Docker)
+## Environment Variables
 
-This project is fully containerized for a smooth and consistent development experience using Docker. This ensures hot-reloading works out-of-the-box without needing to manage Node.js versions locally.
+Create a local environment file before running the application:
 
-Follow these steps to get a local copy up and running:
+```bash
+cp .env.example .env
+```
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/chochkimhour/my-portfolio.git
-   cd my-portfolio
-   ```
+On Windows Command Prompt:
 
-2. **Environment Configuration:**
-   Copy the `.env.example` file to create your local `.env` configuration:
-   ```bash
-   # On Windows (Command Prompt)
-   copy .env.example .env
+```cmd
+copy .env.example .env
+```
 
-   # On Linux / Mac / Git Bash
-   cp .env.example .env
-   ```
-   *Edit the newly created `.env` file to include your specific personal and professional details instead of the placeholders.*
+Then update `.env` with your personal information:
 
-3. **Start the application with Docker:**
-   ```bash
-   docker compose up -d --build
-   ```
+```env
+USER_NAME="Choch Kimhour"
+USER_ROLE="Backend Engineer"
+USER_EMAIL="your_email@example.com"
+USER_PHONE="+855 ..."
+USER_LOCATION="Phnom Penh, Cambodia"
+GITLAB_URL="https://gitlab.com/yourusername"
+LINKEDIN_URL="https://www.linkedin.com/in/yourusername"
+TELEGRAM_URL="https://t.me/yourusername"
+TELEGRAM_USERNAME="@yourusername"
+TAGLINE="A short professional tagline."
+BRAND_DESCRIPTION="A concise professional summary."
+ABOUT_P1="First paragraph of your about section."
+ABOUT_P2="Second paragraph of your about section."
+```
 
-4. **Access the Application:**
-   Open your browser and navigate to:
-   👉 **[http://localhost:5173](http://localhost:5173)**
+## Local Development
 
-5. **Stop the Application:**
-   When you're done, you can gracefully stop the container by running:
-   ```bash
-   docker compose down
-   ```
+Install dependencies:
 
-*(Note: Any changes you make to the source code on your local machine will automatically be reflected in the browser thanks to Docker volume mapping).*
+```bash
+npm install
+```
 
----
+Start the development server:
 
-## 📬 Contact
-- **Email:** hello@chochkimhour.com
-- **LinkedIn:** [chochkimhour](#)
-- **GitHub:** [@chochkimhour](https://github.com/chochkimhour)
+```bash
+npm run dev
+```
 
----
+Open the application at:
 
-<p align="center">Made with ❤️ by Choch Kimhour</p>
+```text
+http://localhost:5173
+```
+
+## Docker Development
+
+Build and start the application:
+
+```bash
+docker compose up -d --build
+```
+
+Open the application at:
+
+```text
+http://localhost:5173
+```
+
+Stop the container:
+
+```bash
+docker compose down
+```
+
+## Available Scripts
+
+```bash
+npm run dev
+```
+
+Starts the Vite development server.
+
+```bash
+npm run build
+```
+
+Builds the application for production.
+
+```bash
+npm run preview
+```
+
+Serves the production build locally for verification.
+
+```bash
+npm run lint
+```
+
+Runs ESLint across the project.
+
+## Project Structure
+
+```text
+src/
+  assets/       Static images and visual assets
+  components/   Reusable page sections and UI components
+  constants/    Navigation, profile, project, service, and content data
+  layouts/      Shared layout components
+  pages/        Page-level views
+  utils/        Utility logic
+```
+
+## Production Build
+
+Create an optimized production build:
+
+```bash
+npm run build
+```
+
+Preview the generated build locally:
+
+```bash
+npm run preview
+```
+
+The production output is generated in the `dist` directory.
+
+## Continuous Integration
+
+This repository includes a GitHub Actions CI workflow at `.github/workflows/ci.yml`.
+
+The workflow runs on pushes and pull requests targeting `main` or `master` and performs the following checks:
+
+- Installs dependencies with `npm ci`
+- Runs ESLint with `npm run lint`
+- Builds the production application with `npm run build`
+
+## License
+
+This project is licensed under the MIT License. See `LICENSE` for details.
+
+Copyright (c) 2026 Choch Kimhour.

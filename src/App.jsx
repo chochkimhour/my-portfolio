@@ -23,14 +23,9 @@ function ScrollToTopLogic() {
 }
 
 function App() {
-  const [darkMode, setDarkMode] = useState(false);
-
-  // Initialize dark mode based on system preference
-  useEffect(() => {
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setDarkMode(true);
-    }
-  }, []);
+  const [darkMode, setDarkMode] = useState(() =>
+    window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false
+  );
 
   // Update HTML class when darkMode changes
   useEffect(() => {
