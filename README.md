@@ -1,5 +1,12 @@
 # Choch Kimhour Portfolio
 
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=000000)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?logo=tailwindcss&logoColor=ffffff)
+![Node.js](https://img.shields.io/badge/Node.js-20.19+-339933?logo=nodedotjs&logoColor=ffffff)
+![Docker](https://img.shields.io/badge/Docker-supported-2496ED?logo=docker&logoColor=ffffff)
+![Type](https://img.shields.io/badge/Type-ESM%20JavaScript-F7DF1E?logo=javascript&logoColor=000000)
+![License](https://img.shields.io/badge/License-MIT-blue)
+
 A production-ready personal portfolio website for Choch Kimhour, built with React, Vite, Tailwind CSS, and Docker. The application presents professional experience, services, featured projects, contact links, and a small interactive portfolio assistant.
 
 ## Overview
