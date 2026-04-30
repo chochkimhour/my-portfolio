@@ -1,3 +1,6 @@
+const env = import.meta.env;
+const fromEnv = (key, fallback) => env[key] || fallback;
+
 export const NAV_LINKS = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
@@ -45,20 +48,20 @@ export const PROJECTS = [
 ];
 
 export const PERSONAL_INFO = {
-    name: import.meta.env.USER_NAME,
-    role: import.meta.env.USER_ROLE,
+    name: fromEnv("USER_NAME", "Choch Kimhour"),
+    role: fromEnv("USER_ROLE", "Backend Engineer"),
     roles: ["Backend Engineer"],
-    email: import.meta.env.USER_EMAIL,
-    phone: import.meta.env.USER_PHONE,
-    location: import.meta.env.USER_LOCATION,
-    gitlabUrl: import.meta.env.GITLAB_URL,
-    linkedinUrl: import.meta.env.LINKEDIN_URL,
-    telegramUrl: import.meta.env.TELEGRAM_URL,
-    telegramUsername: import.meta.env.TELEGRAM_USERNAME,
-    tagline: import.meta.env.TAGLINE,
-    brandDescription: import.meta.env.BRAND_DESCRIPTION,
-    aboutP1: import.meta.env.ABOUT_P1,
-    aboutP2: import.meta.env.ABOUT_P2,
+    email: fromEnv("USER_EMAIL", "your_email@example.com"),
+    phone: fromEnv("USER_PHONE", "+855 ..."),
+    location: fromEnv("USER_LOCATION", "Phnom Penh, Cambodia"),
+    gitlabUrl: fromEnv("GITLAB_URL", "https://gitlab.com/yourusername"),
+    linkedinUrl: fromEnv("LINKEDIN_URL", "https://www.linkedin.com/in/yourusername"),
+    telegramUrl: fromEnv("TELEGRAM_URL", "https://t.me/yourusername"),
+    telegramUsername: fromEnv("TELEGRAM_USERNAME", "@yourusername"),
+    tagline: fromEnv("TAGLINE", "Backend engineer building clean, reliable systems."),
+    brandDescription: fromEnv("BRAND_DESCRIPTION", "I build maintainable backend services, APIs, and full-stack portfolio experiences with a focus on reliability and performance."),
+    aboutP1: fromEnv("ABOUT_P1", "I am a backend engineer based in Phnom Penh, Cambodia, focused on building practical systems that are reliable, readable, and easy to evolve."),
+    aboutP2: fromEnv("ABOUT_P2", "My work spans API design, database architecture, server-side development, and frontend collaboration for complete product experiences."),
     expertise: ["Web Apps", "UI/UX Design", "Performance", "Cloud Architecture", "Mobile First", "Scalable APIs"],
     stats: [
         { label: "Years Exp.", value: "2+" },

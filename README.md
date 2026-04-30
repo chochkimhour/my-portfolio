@@ -165,6 +165,23 @@ npm run preview
 
 The production output is generated in the `dist` directory.
 
+## GitHub Pages Deployment
+
+This project is ready for GitHub Pages hosting through GitHub Actions.
+
+1. Push the repository to GitHub.
+2. In the GitHub repository, open `Settings` > `Pages`.
+3. Set `Build and deployment` > `Source` to `GitHub Actions`.
+4. Push to the `main` or `master` branch.
+
+The workflow in `.github/workflows/ci.yml` will install dependencies, run lint, build the site, and deploy the `dist` folder to GitHub Pages.
+
+The app uses hash-based routes so pages work correctly on GitHub Pages:
+
+```text
+https://yourusername.github.io/my-portfolio/#/projects
+```
+
 ## Continuous Integration
 
 This repository includes a GitHub Actions CI workflow at `.github/workflows/ci.yml`.
