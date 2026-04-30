@@ -44,13 +44,13 @@ const Projects = () => {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className={`inline-flex items-center justify-center gap-2 px-4 py-3 text-white rounded-lg text-xs font-black uppercase tracking-wider shadow-lg transition-all hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 ${
-                                            project.title === "My Portfolio"
+                                            project.id === 1
                                                 ? "bg-amber-600 hover:bg-amber-700 shadow-amber-700/15 focus-visible:ring-amber-500/25"
                                                 : "bg-[#cb3837] hover:bg-[#b62f2e] shadow-red-700/15 focus-visible:ring-red-600/25"
                                         }`}
                                     >
-                                        {project.title === "My Portfolio" ? "View Live" : "View npm"}
-                                        {project.title === "My Portfolio" ? (
+                                        {project.id === 1 ? "View Live" : "View npm"}
+                                        {project.id === 1 ? (
                                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5" aria-hidden="true">
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h4m0 0v4m0-4L9 15" />
                                             </svg>

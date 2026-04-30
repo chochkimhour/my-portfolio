@@ -1,5 +1,10 @@
 const env = import.meta.env;
 const fromEnv = (key, fallback) => env[key] || fallback;
+const fromEnvList = (key, fallback) =>
+    fromEnv(key, fallback.join(","))
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
 const userRole = fromEnv("USER_ROLE", "Your Role");
 
 export const NAV_LINKS = [
@@ -12,36 +17,36 @@ export const NAV_LINKS = [
 ];
 
 export const SKILLS = {
-    languages: ["HTML", "CSS", "JavaScript", "Java", "Groovy", "Python"],
-    frameworks: ["Node.js", "Express", "NestJS", "Spring Boot", "React JS", "Tailwind CSS", "Grails"],
-    databases: ["MySQL", "PostgreSQL", "Redis"],
-    devops: ["Git", "GitLab", "Docker", "CI/CD", "Cloud Deployment"]
+    languages: fromEnvList("SKILLS_LANGUAGES", ["HTML", "CSS", "JavaScript"]),
+    frameworks: fromEnvList("SKILLS_FRAMEWORKS", ["React JS", "Node.js", "Tailwind CSS"]),
+    databases: fromEnvList("SKILLS_DATABASES", ["PostgreSQL", "MySQL"]),
+    devops: fromEnvList("SKILLS_DEVOPS", ["Git", "Docker", "CI/CD"])
 };
 
 export const PROJECTS = [
     {
         id: 1,
-        title: "My Portfolio",
-        description: "A responsive personal portfolio built as a single-page React landing experience. It highlights my skills, services, work experience, projects, and contact links with GitHub Pages deployment.",
-        tech: ["React", "Vite", "Tailwind CSS", "GitHub Pages"],
+        title: fromEnv("PROJECT_1_TITLE", "My Portfolio"),
+        description: fromEnv("PROJECT_1_DESCRIPTION", "A responsive personal portfolio built as a single-page React landing experience."),
+        tech: fromEnvList("PROJECT_1_TECH", ["React", "Vite", "Tailwind CSS"]),
         imageGradient: "from-amber-500 to-orange-600",
         liveUrl: fromEnv("PORTFOLIO_URL", "https://yourusername.github.io/my-portfolio/"),
         githubUrl: fromEnv("PORTFOLIO_REPO_URL", "https://github.com/yourusername/my-portfolio")
     },
     {
         id: 2,
-        title: "api-core-backend",
-        description: "An npm package for reusable backend API foundations, created to speed up consistent server-side project setup and reduce repeated boilerplate across backend services.",
-        tech: ["Node.js", "Backend", "API", "npm"],
+        title: fromEnv("PROJECT_2_TITLE", "api-core-backend"),
+        description: fromEnv("PROJECT_2_DESCRIPTION", "An npm package for reusable backend API foundations."),
+        tech: fromEnvList("PROJECT_2_TECH", ["Node.js", "Backend", "API", "npm"]),
         imageGradient: "from-red-600 to-rose-700",
         liveUrl: fromEnv("API_CORE_BACKEND_NPM_URL", "https://www.npmjs.com/package/api-core-backend"),
         githubUrl: fromEnv("API_CORE_BACKEND_REPO_URL", "https://github.com/yourusername/api-core-backend")
     },
     {
         id: 3,
-        title: "init-backend-project",
-        description: "A backend starter utility published on npm to initialize new backend projects faster with a cleaner starting structure and practical defaults.",
-        tech: ["Node.js", "CLI", "Scaffolding", "npm"],
+        title: fromEnv("PROJECT_3_TITLE", "init-backend-project"),
+        description: fromEnv("PROJECT_3_DESCRIPTION", "A backend starter utility published on npm."),
+        tech: fromEnvList("PROJECT_3_TECH", ["Node.js", "CLI", "Scaffolding", "npm"]),
         imageGradient: "from-blue-600 to-indigo-700",
         liveUrl: fromEnv("INIT_BACKEND_PROJECT_NPM_URL", "https://www.npmjs.com/package/init-backend-project"),
         githubUrl: fromEnv("INIT_BACKEND_PROJECT_REPO_URL", "https://github.com/yourusername/init-backend-project")
@@ -64,10 +69,10 @@ export const PERSONAL_INFO = {
     brandDescription: fromEnv("BRAND_DESCRIPTION", "A concise professional summary."),
     aboutP1: fromEnv("ABOUT_P1", "First paragraph of your about section."),
     aboutP2: fromEnv("ABOUT_P2", "Second paragraph of your about section."),
-    expertise: ["Web Apps", "UI/UX Design", "Performance", "Cloud Architecture", "Mobile First", "Scalable APIs"],
+    expertise: fromEnvList("EXPERTISE_ITEMS", ["Web Apps", "Performance", "Scalable APIs"]),
     stats: [
-        { label: "Years Exp.", value: "2+" },
-        { label: "Projects", value: "4" }
+        { label: fromEnv("STATS_1_LABEL", "Years Exp."), value: fromEnv("STATS_1_VALUE", "1+") },
+        { label: fromEnv("STATS_2_LABEL", "Projects"), value: fromEnv("STATS_2_VALUE", "1+") }
     ]
 };
 
@@ -136,42 +141,42 @@ export const UI_TEXT = {
 
 export const SERVICES = [
     {
-        title: "API Design & Development",
-        description: "Architecting robust RESTful and GraphQL APIs with a focus on high availability, security, and seamless integration for modern frontend applications.",
+        title: fromEnv("SERVICE_1_TITLE", "API Design & Development"),
+        description: fromEnv("SERVICE_1_DESCRIPTION", "Building reliable APIs for modern applications."),
         icon: "code"
     },
     {
-        title: "Database Architecture",
-        description: "Designing scalable database schemas and optimizing complex queries using PostgreSQL, MySQL, and Redis to ensure lightning-fast data retrieval.",
+        title: fromEnv("SERVICE_2_TITLE", "Database Architecture"),
+        description: fromEnv("SERVICE_2_DESCRIPTION", "Designing practical database schemas and queries."),
         icon: "server"
     },
     {
-        title: "System Infrastructure",
-        description: "Building resilient server-side architectures, implementing Docker containerization, and setting up automated CI/CD pipelines for reliable deployments.",
+        title: fromEnv("SERVICE_3_TITLE", "System Infrastructure"),
+        description: fromEnv("SERVICE_3_DESCRIPTION", "Preparing maintainable infrastructure and deployment workflows."),
         icon: "window"
     }
 ];
 
 export const EXPERIENCE = [
     {
-        company: "Ecoinsoft Solutions Co., Ltd",
-        role: "Backend Engineer",
-        startDate: "2025-04-01",
-        endDate: null, // "Present"
-        description: "Architecting a comprehensive School Management System using the Grails framework. Engineered core APIs for dashboards, user management, classroom coordination, surveys, and assignment modules."
+        company: fromEnv("EXPERIENCE_1_COMPANY", "Company Name"),
+        role: fromEnv("EXPERIENCE_1_ROLE", "Role Title"),
+        startDate: fromEnv("EXPERIENCE_1_START_DATE", "2025-01-01"),
+        endDate: fromEnv("EXPERIENCE_1_END_DATE", ""),
+        description: fromEnv("EXPERIENCE_1_DESCRIPTION", "Describe your current role and impact.")
     },
     {
-        company: "Ecoinsoft Solutions Co., Ltd",
-        role: "Backend Developer Intern",
-        startDate: "2024-12-01",
-        endDate: "2025-04-01",
-        description: "Mastered Java and Object-Oriented Programming (OOP) principles. Focused on implementing clean architecture through design patterns and architecting high-performance CRUD APIs."
+        company: fromEnv("EXPERIENCE_2_COMPANY", "Company Name"),
+        role: fromEnv("EXPERIENCE_2_ROLE", "Role Title"),
+        startDate: fromEnv("EXPERIENCE_2_START_DATE", "2024-01-01"),
+        endDate: fromEnv("EXPERIENCE_2_END_DATE", "2024-12-01"),
+        description: fromEnv("EXPERIENCE_2_DESCRIPTION", "Describe your previous role and impact.")
     },
     {
-        company: "Soul Advisor",
-        role: "Frontend Developer Intern",
-        startDate: "2024-02-01",
-        endDate: "2024-05-01",
-        description: "Collaborated on building responsive web interfaces using React.js and Bootstrap. Focused on component lifecycle management and ensuring a seamless cross-platform user experience."
+        company: fromEnv("EXPERIENCE_3_COMPANY", "Company Name"),
+        role: fromEnv("EXPERIENCE_3_ROLE", "Role Title"),
+        startDate: fromEnv("EXPERIENCE_3_START_DATE", "2024-01-01"),
+        endDate: fromEnv("EXPERIENCE_3_END_DATE", "2024-06-01"),
+        description: fromEnv("EXPERIENCE_3_DESCRIPTION", "Describe your earlier role and impact.")
     }
 ];

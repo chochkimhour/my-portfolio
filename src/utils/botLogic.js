@@ -6,7 +6,7 @@ export const getBotResponse = (query) => {
     // Safety check in case PERSONAL_INFO variables are not parsed yet
     const fullName = PERSONAL_INFO?.name || "The Developer";
     const firstName = fullName !== "The Developer" ? fullName.split(' ') : "He";
-    const role = PERSONAL_INFO?.role || "Backend Engineer";
+    const role = PERSONAL_INFO?.role || "professional";
 
     const responses = [
         {
