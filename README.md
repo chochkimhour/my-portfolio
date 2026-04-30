@@ -26,7 +26,6 @@ This project is designed as a fast, responsive, and maintainable portfolio appli
 ## Tech Stack
 
 - React 19
-- React Router
 - Tailwind CSS 4
 - Vite
 - ESLint
@@ -176,10 +175,10 @@ This project is ready for GitHub Pages hosting through GitHub Actions.
 
 The workflow in `.github/workflows/ci.yml` will install dependencies, run lint, build the site, and deploy the `dist` folder to GitHub Pages.
 
-The app uses hash-based routes so pages work correctly on GitHub Pages:
+The app is a single scrolling landing page. Section links use simple anchors:
 
 ```text
-https://yourusername.github.io/my-portfolio/#/projects
+https://yourusername.github.io/my-portfolio/#projects
 ```
 
 ## Continuous Integration
