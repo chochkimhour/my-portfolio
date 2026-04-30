@@ -38,9 +38,11 @@ Use one of the following setups:
 - Node.js 20 or later with npm
 - Docker and Docker Compose
 
-## Environment Variables
+## Configuration
 
-Create a local environment file before running the application:
+All portfolio content is driven by environment variables. The source code reads profile data, contact links, projects, skills, services, and experience from env values in `src/constants/index.js`.
+
+For local development, create a private `.env` file:
 
 ```bash
 cp .env.example .env
@@ -52,30 +54,19 @@ On Windows Command Prompt:
 copy .env.example .env
 ```
 
-Then update `.env` with your personal information:
+Then update `.env` with your real portfolio data. The `.env` file is ignored by git, so local personal data stays out of the repository.
 
-```env
-USER_NAME="Choch Kimhour"
-USER_ROLE="Backend Engineer"
-USER_EMAIL="chochkimhour2303@gmail.com"
-USER_LOCATION="Phnom Penh, Cambodia"
-GITHUB_URL="https://github.com/chochkimhour"
-GITLAB_URL="https://gitlab.com/chochkimhour"
-LINKEDIN_URL="https://www.linkedin.com/in/choch-kimhour"
-NPM_PACKAGE_URL="https://www.npmjs.com/~chochkimhour"
-TELEGRAM_URL="https://t.me/choch_kimhour"
-TELEGRAM_USERNAME="@choch_kimhour"
-PORTFOLIO_URL="https://chochkimhour.github.io/my-portfolio/"
-PORTFOLIO_REPO_URL="https://github.com/chochkimhour/my-portfolio"
-API_CORE_BACKEND_NPM_URL="https://www.npmjs.com/package/api-core-backend"
-API_CORE_BACKEND_REPO_URL="https://github.com/chochkimhour/api-core-backend"
-INIT_BACKEND_PROJECT_NPM_URL="https://www.npmjs.com/package/init-backend-project"
-INIT_BACKEND_PROJECT_REPO_URL="https://github.com/chochkimhour/init-backend-project"
-TAGLINE="A short professional tagline."
-BRAND_DESCRIPTION="A concise professional summary."
-ABOUT_P1="First paragraph of your about section."
-ABOUT_P2="Second paragraph of your about section."
-```
+Use `.env.example` as the complete list of supported variables. The main groups are:
+
+- `USER_*` for name, role, email, and location
+- `GITHUB_URL`, `GITLAB_URL`, `LINKEDIN_URL`, `NPM_PACKAGE_URL`, `TELEGRAM_*` for public profiles
+- `PROJECT_*`, `PORTFOLIO_*`, `API_CORE_BACKEND_*`, and `INIT_BACKEND_PROJECT_*` for featured projects
+- `SKILLS_*`, `EXPERTISE_ITEMS`, and `STATS_*` for profile detail
+- `TAGLINE`, `BRAND_DESCRIPTION`, `ABOUT_P1`, and `ABOUT_P2` for hero/about copy
+- `SERVICE_*` for service cards
+- `EXPERIENCE_*` for work history
+
+Do not commit `.env` or `.env.production`. For deployment, configure the same variable names in GitHub repository variables.
 
 ## Local Development
 
@@ -176,16 +167,18 @@ The production output is generated in the `dist` directory.
 This project is ready for GitHub Pages hosting through GitHub Actions.
 
 1. Push the repository to GitHub.
-2. In the GitHub repository, open `Settings` > `Pages`.
-3. Set `Build and deployment` > `Source` to `GitHub Actions`.
-4. Push to the `main` or `master` branch.
+2. In the GitHub repository, open `Settings` > `Secrets and variables` > `Actions` > `Variables`.
+3. Add the same variable names used in `.env.example`, with the production portfolio values.
+4. Open `Settings` > `Pages`.
+5. Set `Build and deployment` > `Source` to `GitHub Actions`.
+6. Push to the `main` or `master` branch.
 
-The workflow in `.github/workflows/ci.yml` will install dependencies, run lint, build the site, and deploy the `dist` folder to GitHub Pages.
+The workflow in `.github/workflows/ci.yml` maps GitHub repository variables into the Vite build, then installs dependencies, runs lint, builds the site, and deploys the `dist` folder to GitHub Pages.
 
 The app is a single scrolling landing page. Section links use simple anchors:
 
 ```text
-https://yourusername.github.io/my-portfolio/#projects
+https://<github-username>.github.io/my-portfolio/#projects
 ```
 
 ## Continuous Integration
