@@ -65,7 +65,11 @@ const Navbar = ({ darkMode, setDarkMode }) => {
                         className={`font-extrabold text-2xl tracking-tight transition-colors duration-300 cursor-pointer ${isScrolled ? 'text-gray-900 dark:text-white' : 'text-gray-900 dark:text-white'}`}
                     >
                         <span className="mr-3 inline-flex items-center justify-center w-10 h-10 rounded-full bg-amber-600/10 dark:bg-white/10 border border-amber-600/20 dark:border-white/20 shadow-inner group-hover:scale-110 transition-all duration-300">
-                            <span className="text-sm font-black text-amber-600 dark:text-amber-400">CK</span>
+                            <span className="animate-coding text-amber-600 dark:text-amber-400" aria-hidden="true">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 9 5 12l3 3m8-6 3 3-3 3M14 6l-4 12" />
+                                </svg>
+                            </span>
                         </span> {PERSONAL_INFO.name}
                     </a>
                 </div>
