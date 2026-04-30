@@ -20,30 +20,30 @@ export const SKILLS = {
 export const PROJECTS = [
     {
         id: 1,
-        title: "AI Telegram Bot Assistant",
-        description: "An intelligent Telegram bot integrated with multiple AI models via OpenRouter. Features a resilient webhook architecture and persistent MySQL storage for individual user sessions and request history.",
-        tech: ["Python", "MySQL", "OpenRouter API", "Webhooks"],
-        imageGradient: "from-blue-600 to-indigo-700",
-        liveUrl: "#",
-        githubUrl: "#"
+        title: "My Portfolio",
+        description: "A responsive personal portfolio built as a single-page React landing experience. It highlights my skills, services, work experience, projects, and contact links with GitHub Pages deployment.",
+        tech: ["React", "Vite", "Tailwind CSS", "GitHub Pages"],
+        imageGradient: "from-amber-500 to-orange-600",
+        liveUrl: fromEnv("PORTFOLIO_URL", "https://chochkimhour.github.io/my-portfolio/"),
+        githubUrl: fromEnv("PORTFOLIO_REPO_URL", "https://github.com/chochkimhour/my-portfolio")
     },
     {
         id: 2,
-        title: "Professional Portfolio",
-        description: "A high-performance personal branding platform for Backend Engineers. Built with a focus on clean architecture, optimized animations, and dynamic SEO-friendly content delivery.",
-        tech: ["React JS", "Tailwind CSS", "Vite JS", "Framer Motion"],
-        imageGradient: "from-amber-500 to-orange-600",
-        liveUrl: "#",
-        githubUrl: "#"
+        title: "api-core-backend",
+        description: "An npm package for reusable backend API foundations, created to speed up consistent server-side project setup and reduce repeated boilerplate across backend services.",
+        tech: ["Node.js", "Backend", "API", "npm"],
+        imageGradient: "from-red-600 to-rose-700",
+        liveUrl: fromEnv("API_CORE_BACKEND_NPM_URL", "https://www.npmjs.com/package/api-core-backend"),
+        githubUrl: fromEnv("API_CORE_BACKEND_REPO_URL", "https://github.com/chochkimhour/api-core-backend")
     },
     {
         id: 3,
-        title: "Upcoming Project...",
-        description: "Currently architecting a specialized backend solution. Focusing on scalability, high-availability data systems, and complex business logic implementation. Stay tuned!",
-        tech: [],
-        imageGradient: "from-gray-700 to-slate-900",
-        liveUrl: "#",
-        githubUrl: "#"
+        title: "init-backend-project",
+        description: "A backend starter utility published on npm to initialize new backend projects faster with a cleaner starting structure and practical defaults.",
+        tech: ["Node.js", "CLI", "Scaffolding", "npm"],
+        imageGradient: "from-blue-600 to-indigo-700",
+        liveUrl: fromEnv("INIT_BACKEND_PROJECT_NPM_URL", "https://www.npmjs.com/package/init-backend-project"),
+        githubUrl: fromEnv("INIT_BACKEND_PROJECT_REPO_URL", "https://github.com/chochkimhour/init-backend-project")
     }
 ];
 
@@ -54,8 +54,10 @@ export const PERSONAL_INFO = {
     email: fromEnv("USER_EMAIL", "your_email@example.com"),
     phone: fromEnv("USER_PHONE", "+855 ..."),
     location: fromEnv("USER_LOCATION", "Phnom Penh, Cambodia"),
+    githubUrl: fromEnv("GITHUB_URL", "https://github.com/chochkimhour"),
     gitlabUrl: fromEnv("GITLAB_URL", "https://gitlab.com/yourusername"),
     linkedinUrl: fromEnv("LINKEDIN_URL", "https://www.linkedin.com/in/yourusername"),
+    npmPackageUrl: fromEnv("NPM_PACKAGE_URL", "https://www.npmjs.com/~chochkimhour"),
     telegramUrl: fromEnv("TELEGRAM_URL", "https://t.me/yourusername"),
     telegramUsername: fromEnv("TELEGRAM_USERNAME", "@yourusername"),
     tagline: fromEnv("TAGLINE", "Backend engineer building clean, reliable systems."),
@@ -71,7 +73,8 @@ export const PERSONAL_INFO = {
 
 export const UI_TEXT = {
     hero: {
-        cv_button: "Download My CV"
+        github_button: "View My GitHub",
+        npm_button: "View My npm Package"
     },
     about: {
         title: "About",
