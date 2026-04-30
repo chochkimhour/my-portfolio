@@ -43,21 +43,31 @@ const Projects = () => {
                                         href={project.liveUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all hover:-translate-y-0.5"
+                                        className={`inline-flex items-center justify-center gap-2 px-4 py-3 text-white rounded-lg text-xs font-black uppercase tracking-wider shadow-lg transition-all hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 ${
+                                            project.title === "My Portfolio"
+                                                ? "bg-amber-600 hover:bg-amber-700 shadow-amber-700/15 focus-visible:ring-amber-500/25"
+                                                : "bg-[#cb3837] hover:bg-[#b62f2e] shadow-red-700/15 focus-visible:ring-red-600/25"
+                                        }`}
                                     >
                                         {project.title === "My Portfolio" ? "View Live" : "View npm"}
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h4m0 0v4m0-4L9 15" />
-                                        </svg>
+                                        {project.title === "My Portfolio" ? (
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5" aria-hidden="true">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h4m0 0v4m0-4L9 15" />
+                                            </svg>
+                                        ) : (
+                                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                <path d="M1.5 7.5h21v7.56h-6v1.44H12v-1.44H1.5V7.5Zm1.5 6h3V9H4.5v3H6V9h1.5v4.5h3V9H12v4.5h3V9h4.5v4.5H21V9h-1.5v4.5H18V10.5h-1.5v3H13.5V9H9v3H7.5V9H3v4.5Z" />
+                                            </svg>
+                                        )}
                                     </a>
                                     <a
                                         href={project.githubUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center justify-center gap-2 px-4 py-3 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 rounded-xl text-xs font-black uppercase tracking-wider transition-all hover:-translate-y-0.5 hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400"
+                                        className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-[#24292f] text-white rounded-lg text-xs font-black uppercase tracking-wider shadow-lg shadow-gray-950/15 transition-all hover:-translate-y-0.5 hover:bg-[#111827] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-gray-900/20 dark:bg-white dark:text-[#24292f] dark:hover:bg-gray-100 dark:focus-visible:ring-white/25"
                                     >
-                                        Source
-                                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                        View GitHub
+                                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                             <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.1 3.29 9.41 7.86 10.94.58.1.79-.25.79-.56v-2.16c-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.23-1.28-5.23-5.68 0-1.25.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.16 1.18a10.9 10.9 0 0 1 5.75 0c2.19-1.49 3.15-1.18 3.15-1.18.63 1.58.24 2.75.12 3.04.74.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z" />
                                         </svg>
                                     </a>

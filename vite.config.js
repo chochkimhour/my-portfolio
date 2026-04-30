@@ -6,7 +6,20 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   base: './',
   plugins: [react(), tailwindcss()],
-  envPrefix: ['USER_', 'GITHUB_', 'GITLAB_', 'LINKEDIN_', 'TELEGRAM_', 'NPM_', 'TAGLINE', 'BRAND_', 'ABOUT_'],
+  envPrefix: [
+    'USER_',
+    'GITHUB_',
+    'GITLAB_',
+    'LINKEDIN_',
+    'TELEGRAM_',
+    'NPM_',
+    'PORTFOLIO_',
+    'API_CORE_BACKEND_',
+    'INIT_BACKEND_PROJECT_',
+    'TAGLINE',
+    'BRAND_',
+    'ABOUT_'
+  ],
   server: {
     host: true,
     allowedHosts: true
