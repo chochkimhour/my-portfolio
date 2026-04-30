@@ -76,6 +76,13 @@ export const PERSONAL_INFO = {
     ]
 };
 
+export const SEO_INFO = {
+    title: fromEnv("SEO_TITLE", `${PERSONAL_INFO.name} | ${PERSONAL_INFO.role} Portfolio`),
+    description: fromEnv("SEO_DESCRIPTION", PERSONAL_INFO.brandDescription),
+    ogTitle: fromEnv("SEO_OG_TITLE", `${PERSONAL_INFO.name} | ${PERSONAL_INFO.role} Portfolio`),
+    ogDescription: fromEnv("SEO_OG_DESCRIPTION", PERSONAL_INFO.tagline)
+};
+
 export const UI_TEXT = {
     hero: {
         github_button: "View My GitHub",

@@ -81,6 +81,10 @@ jobs:
           BRAND_DESCRIPTION: ${{ vars.BRAND_DESCRIPTION }}
           ABOUT_P1: ${{ vars.ABOUT_P1 }}
           ABOUT_P2: ${{ vars.ABOUT_P2 }}
+          SEO_TITLE: ${{ vars.SEO_TITLE }}
+          SEO_DESCRIPTION: ${{ vars.SEO_DESCRIPTION }}
+          SEO_OG_TITLE: ${{ vars.SEO_OG_TITLE }}
+          SEO_OG_DESCRIPTION: ${{ vars.SEO_OG_DESCRIPTION }}
           SERVICE_1_TITLE: ${{ vars.SERVICE_1_TITLE }}
           SERVICE_1_DESCRIPTION: ${{ vars.SERVICE_1_DESCRIPTION }}
           SERVICE_2_TITLE: ${{ vars.SERVICE_2_TITLE }}

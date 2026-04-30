@@ -8,6 +8,7 @@ import Experience from "./components/Experience";
 import Projects from "./components/Projects";
 import Contact from "./components/Contact";
 import ScrollToTop from "./components/ScrollToTop";
+import { SEO_INFO } from "./constants";
 
 // Lazy load heavy components
 const PortfolioAssistant = lazy(() => import("./components/PortfolioAssistant"));
@@ -25,6 +26,19 @@ function App() {
       document.documentElement.classList.remove("dark");
     }
   }, [darkMode]);
+
+  useEffect(() => {
+    document.title = SEO_INFO.title;
+
+    const setMeta = (selector, content) => {
+      const meta = document.querySelector(selector);
+      if (meta) meta.setAttribute("content", content);
+    };
+
+    setMeta('meta[name="description"]', SEO_INFO.description);
+    setMeta('meta[property="og:title"]', SEO_INFO.ogTitle);
+    setMeta('meta[property="og:description"]', SEO_INFO.ogDescription);
+  }, []);
 
   return (
     // This div ensures the page is at least the full height of the screen

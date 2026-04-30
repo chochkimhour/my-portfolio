@@ -24,7 +24,8 @@ export default defineConfig({
     'EXPERIENCE_',
     'TAGLINE',
     'BRAND_',
-    'ABOUT_'
+    'ABOUT_',
+    'SEO_'
   ],
   server: {
     host: true,

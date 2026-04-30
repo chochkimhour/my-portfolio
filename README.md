@@ -1,4 +1,4 @@
-# Choch Kimhour Portfolio
+# Portfolio Website
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=000000)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?logo=tailwindcss&logoColor=ffffff)
@@ -7,7 +7,7 @@
 ![Type](https://img.shields.io/badge/Type-ESM%20JavaScript-F7DF1E?logo=javascript&logoColor=000000)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 
-A production-ready personal portfolio website for Choch Kimhour, built with React, Vite, Tailwind CSS, and Docker. The application presents professional experience, services, featured projects, contact links, and a small interactive portfolio assistant.
+A production-ready personal portfolio website built with React, Vite, Tailwind CSS, and Docker. The application presents professional experience, services, featured projects, contact links, and a small interactive portfolio assistant.
 
 ## Overview
 
@@ -62,7 +62,7 @@ Use `.env.example` as the complete list of supported variables. The main groups 
 - `GITHUB_URL`, `GITLAB_URL`, `LINKEDIN_URL`, `NPM_PACKAGE_URL`, `TELEGRAM_*` for public profiles
 - `PROJECT_*`, `PORTFOLIO_*`, `API_CORE_BACKEND_*`, and `INIT_BACKEND_PROJECT_*` for featured projects
 - `SKILLS_*`, `EXPERTISE_ITEMS`, and `STATS_*` for profile detail
-- `TAGLINE`, `BRAND_DESCRIPTION`, `ABOUT_P1`, and `ABOUT_P2` for hero/about copy
+- `TAGLINE`, `BRAND_DESCRIPTION`, `ABOUT_P1`, `ABOUT_P2`, and `SEO_*` for hero/about/metadata copy
 - `SERVICE_*` for service cards
 - `EXPERIENCE_*` for work history
 
@@ -175,6 +175,14 @@ This project is ready for GitHub Pages hosting through GitHub Actions.
 
 The workflow in `.github/workflows/ci.yml` maps GitHub repository variables into the Vite build, then installs dependencies, runs lint, builds the site, and deploys the `dist` folder to GitHub Pages.
 
+To upload the current local `.env` values as GitHub repository variables without committing `.env`, install the GitHub CLI, run `gh auth login`, then run:
+
+```powershell
+.\scripts\set-github-vars.ps1 -Repo chochkimhour/my-portfolio
+```
+
+After the variables are set, push a commit or rerun the GitHub Actions workflow so GitHub Pages rebuilds with those values.
+
 The app is a single scrolling landing page. Section links use simple anchors:
 
 ```text
@@ -195,4 +203,4 @@ The workflow runs on pushes and pull requests targeting `main` or `master` and p
 
 This project is licensed under the MIT License. See `LICENSE` for details.
 
-Copyright (c) 2026 Choch Kimhour.
+Copyright (c) 2026.
