@@ -59,7 +59,7 @@ Then update `.env` with your real portfolio data. The `.env` file is ignored by 
 Use `.env.example` as the complete list of supported variables. The main groups are:
 
 - `USER_*` for name, role, email, and location
-- `GITHUB_URL`, `GITLAB_URL`, `LINKEDIN_URL`, `NPM_PACKAGE_URL`, `TELEGRAM_*` for public profiles
+- `GITHUB_URL`, `LINKEDIN_URL`, `NPM_PACKAGE_URL`, `TELEGRAM_*` for public profiles
 - `PROJECT_*`, `PORTFOLIO_*`, `API_CORE_BACKEND_*`, and `INIT_BACKEND_PROJECT_*` for featured projects
 - `SKILLS_*`, `EXPERTISE_ITEMS`, and `STATS_*` for profile detail
 - `TAGLINE`, `BRAND_DESCRIPTION`, `ABOUT_P1`, `ABOUT_P2`, and `SEO_*` for hero/about/metadata copy

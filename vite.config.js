@@ -9,7 +9,6 @@ export default defineConfig({
   envPrefix: [
     'USER_',
     'GITHUB_',
-    'GITLAB_',
     'LINKEDIN_',
     'TELEGRAM_',
     'NPM_',

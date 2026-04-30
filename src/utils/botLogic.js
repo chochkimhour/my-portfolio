@@ -26,8 +26,8 @@ export const getBotResponse = (query) => {
             response: `${firstName} offers high-quality technical services, including: ${SERVICES.map(s => s.title).join(', ')}. He specializes in creating robust backend infrastructures, APIs, and modern system architectures.`
         },
         {
-            keywords: ['contact', 'email', 'telegram', 'gmail', 'reach', 'social', 'linkedin', 'github', 'gitlab', 'find', 'message', 'talk'],
-            response: `You can reach ${firstName} directly via email at ${PERSONAL_INFO.email}. For quick messaging, his Telegram username is ${PERSONAL_INFO.telegramUsername}. You can also connect with him professionally on LinkedIn or check out his GitLab repositories.`
+            keywords: ['contact', 'email', 'telegram', 'gmail', 'reach', 'social', 'linkedin', 'github', 'find', 'message', 'talk'],
+            response: `You can reach ${firstName} directly via email at ${PERSONAL_INFO.email}. For quick messaging, his Telegram username is ${PERSONAL_INFO.telegramUsername}. You can also connect with him professionally on LinkedIn or check out his GitHub repositories.`
         },
         {
             keywords: ['location', 'where', 'live', 'born', 'city', 'country', 'based', 'from'],

@@ -60,7 +60,6 @@ export const PERSONAL_INFO = {
     email: fromEnv("USER_EMAIL", "your_email@example.com"),
     location: fromEnv("USER_LOCATION", "Your City, Country"),
     githubUrl: fromEnv("GITHUB_URL", "https://github.com/yourusername"),
-    gitlabUrl: fromEnv("GITLAB_URL", "https://gitlab.com/yourusername"),
     linkedinUrl: fromEnv("LINKEDIN_URL", "https://www.linkedin.com/in/yourusername"),
     npmPackageUrl: fromEnv("NPM_PACKAGE_URL", "https://www.npmjs.com/~yourusername"),
     telegramUrl: fromEnv("TELEGRAM_URL", "https://t.me/yourusername"),
