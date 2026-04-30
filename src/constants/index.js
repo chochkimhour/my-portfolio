@@ -1,5 +1,6 @@
 const env = import.meta.env;
 const fromEnv = (key, fallback) => env[key] || fallback;
+const userRole = fromEnv("USER_ROLE", "Your Role");
 
 export const NAV_LINKS = [
     { name: "Home", href: "#home" },
@@ -24,8 +25,8 @@ export const PROJECTS = [
         description: "A responsive personal portfolio built as a single-page React landing experience. It highlights my skills, services, work experience, projects, and contact links with GitHub Pages deployment.",
         tech: ["React", "Vite", "Tailwind CSS", "GitHub Pages"],
         imageGradient: "from-amber-500 to-orange-600",
-        liveUrl: fromEnv("PORTFOLIO_URL", "https://chochkimhour.github.io/my-portfolio/"),
-        githubUrl: fromEnv("PORTFOLIO_REPO_URL", "https://github.com/chochkimhour/my-portfolio")
+        liveUrl: fromEnv("PORTFOLIO_URL", "https://yourusername.github.io/my-portfolio/"),
+        githubUrl: fromEnv("PORTFOLIO_REPO_URL", "https://github.com/yourusername/my-portfolio")
     },
     {
         id: 2,
@@ -34,7 +35,7 @@ export const PROJECTS = [
         tech: ["Node.js", "Backend", "API", "npm"],
         imageGradient: "from-red-600 to-rose-700",
         liveUrl: fromEnv("API_CORE_BACKEND_NPM_URL", "https://www.npmjs.com/package/api-core-backend"),
-        githubUrl: fromEnv("API_CORE_BACKEND_REPO_URL", "https://github.com/chochkimhour/api-core-backend")
+        githubUrl: fromEnv("API_CORE_BACKEND_REPO_URL", "https://github.com/yourusername/api-core-backend")
     },
     {
         id: 3,
@@ -43,27 +44,26 @@ export const PROJECTS = [
         tech: ["Node.js", "CLI", "Scaffolding", "npm"],
         imageGradient: "from-blue-600 to-indigo-700",
         liveUrl: fromEnv("INIT_BACKEND_PROJECT_NPM_URL", "https://www.npmjs.com/package/init-backend-project"),
-        githubUrl: fromEnv("INIT_BACKEND_PROJECT_REPO_URL", "https://github.com/chochkimhour/init-backend-project")
+        githubUrl: fromEnv("INIT_BACKEND_PROJECT_REPO_URL", "https://github.com/yourusername/init-backend-project")
     }
 ];
 
 export const PERSONAL_INFO = {
-    name: fromEnv("USER_NAME", "Choch Kimhour"),
-    role: fromEnv("USER_ROLE", "Backend Engineer"),
-    roles: ["Backend Engineer"],
+    name: fromEnv("USER_NAME", "Your Name"),
+    role: userRole,
+    roles: [userRole],
     email: fromEnv("USER_EMAIL", "your_email@example.com"),
-    phone: fromEnv("USER_PHONE", "+855 ..."),
-    location: fromEnv("USER_LOCATION", "Phnom Penh, Cambodia"),
-    githubUrl: fromEnv("GITHUB_URL", "https://github.com/chochkimhour"),
+    location: fromEnv("USER_LOCATION", "Your City, Country"),
+    githubUrl: fromEnv("GITHUB_URL", "https://github.com/yourusername"),
     gitlabUrl: fromEnv("GITLAB_URL", "https://gitlab.com/yourusername"),
     linkedinUrl: fromEnv("LINKEDIN_URL", "https://www.linkedin.com/in/yourusername"),
-    npmPackageUrl: fromEnv("NPM_PACKAGE_URL", "https://www.npmjs.com/~chochkimhour"),
+    npmPackageUrl: fromEnv("NPM_PACKAGE_URL", "https://www.npmjs.com/~yourusername"),
     telegramUrl: fromEnv("TELEGRAM_URL", "https://t.me/yourusername"),
     telegramUsername: fromEnv("TELEGRAM_USERNAME", "@yourusername"),
-    tagline: fromEnv("TAGLINE", "Backend engineer building clean, reliable systems."),
-    brandDescription: fromEnv("BRAND_DESCRIPTION", "I build maintainable backend services, APIs, and full-stack portfolio experiences with a focus on reliability and performance."),
-    aboutP1: fromEnv("ABOUT_P1", "I am a backend engineer based in Phnom Penh, Cambodia, focused on building practical systems that are reliable, readable, and easy to evolve."),
-    aboutP2: fromEnv("ABOUT_P2", "My work spans API design, database architecture, server-side development, and frontend collaboration for complete product experiences."),
+    tagline: fromEnv("TAGLINE", "A short professional tagline."),
+    brandDescription: fromEnv("BRAND_DESCRIPTION", "A concise professional summary."),
+    aboutP1: fromEnv("ABOUT_P1", "First paragraph of your about section."),
+    aboutP2: fromEnv("ABOUT_P2", "Second paragraph of your about section."),
     expertise: ["Web Apps", "UI/UX Design", "Performance", "Cloud Architecture", "Mobile First", "Scalable APIs"],
     stats: [
         { label: "Years Exp.", value: "2+" },
@@ -102,7 +102,7 @@ export const UI_TEXT = {
         highlight: "Touch",
         description: "I'm always open to discussing new projects, creative ideas or opportunities to be part of your visions.",
         telegram: "Telegram",
-        email: "Direct Email",
+        email: "Gmail",
         email_subtext: "Reach Out via Mail",
         linkedin: "LinkedIn",
         linkedin_subtext: "Professional Profile",

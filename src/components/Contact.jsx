@@ -4,7 +4,6 @@ const Contact = () => {
     const linkedinLabel = PERSONAL_INFO.linkedinUrl
         .replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//, '')
         .replace(/\/$/, '');
-    const phoneHref = `tel:${PERSONAL_INFO.phone.replace(/[^\d+]/g, '')}`;
 
     return (
         <section id="contact" className="py-32 px-6 min-h-[calc(100vh-100px)] relative bg-white dark:bg-[#030712] transition-colors duration-500 overflow-hidden section-reveal">
@@ -24,7 +23,7 @@ const Contact = () => {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 max-w-7xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     {/* Telegram Card */}
                     <a href={PERSONAL_INFO.telegramUrl} target="_blank" rel="noopener noreferrer"
                         className="group p-10 modern-card hover:border-amber-500/50 flex flex-col items-center text-center relative overflow-hidden">
@@ -34,7 +33,7 @@ const Contact = () => {
                         </div>
                         <h4 className="text-2xl font-black text-gray-900 dark:text-white mb-2">{UI_TEXT.contact.telegram}</h4>
                         <p className="text-gray-500 dark:text-gray-400 font-bold mb-4 break-all">{PERSONAL_INFO.telegramUsername}</p>
-                        <span className="text-amber-600 dark:text-amber-400 font-black flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
+                        <span className="text-amber-600 dark:text-amber-400 font-black flex items-center gap-2 opacity-100 md:opacity-0 transition-all translate-y-0 md:translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0">
                             {UI_TEXT.contact.message_me} <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 5l7 7-7 7" /></svg>
                         </span>
                     </a>
@@ -48,7 +47,7 @@ const Contact = () => {
                         </div>
                         <h4 className="text-2xl font-black text-gray-900 dark:text-white mb-2">{UI_TEXT.contact.email}</h4>
                         <p className="text-gray-500 dark:text-gray-400 font-bold mb-4 break-all">{PERSONAL_INFO.email}</p>
-                        <span className="text-amber-600 dark:text-amber-400 font-black flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
+                        <span className="text-amber-600 dark:text-amber-400 font-black flex items-center gap-2 opacity-100 md:opacity-0 transition-all translate-y-0 md:translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0">
                             {UI_TEXT.contact.send_email} <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 5l7 7-7 7" /></svg>
                         </span>
                     </a>
@@ -62,22 +61,8 @@ const Contact = () => {
                         </div>
                         <h4 className="text-2xl font-black text-gray-900 dark:text-white mb-2">{UI_TEXT.contact.linkedin}</h4>
                         <p className="text-gray-500 dark:text-gray-400 font-bold mb-4 break-all">{linkedinLabel || UI_TEXT.contact.linkedin_subtext}</p>
-                        <span className="text-amber-600 dark:text-amber-400 font-black flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
+                        <span className="text-amber-600 dark:text-amber-400 font-black flex items-center gap-2 opacity-100 md:opacity-0 transition-all translate-y-0 md:translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0">
                             {UI_TEXT.contact.connect} <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 5l7 7-7 7" /></svg>
-                        </span>
-                    </a>
-
-                    {/* Phone Card */}
-                    <a href={phoneHref}
-                        className="group p-10 modern-card hover:border-amber-500/50 flex flex-col items-center text-center relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#16a34a] to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div className="w-24 h-24 bg-[#16a34a] text-white rounded-3xl flex items-center justify-center text-4xl shadow-2xl shadow-[#16a34a]/30 group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500 mb-8">
-                            <svg className="w-11 h-11" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.8"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106a1.125 1.125 0 0 0-1.173.417l-.97 1.293a1.125 1.125 0 0 1-1.21.38 12.035 12.035 0 0 1-7.143-7.143 1.125 1.125 0 0 1 .38-1.21l1.293-.97c.36-.27.527-.728.417-1.173L6.963 3.102A1.125 1.125 0 0 0 5.872 2.25H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"></path></svg>
-                        </div>
-                        <h4 className="text-2xl font-black text-gray-900 dark:text-white mb-2">Phone</h4>
-                        <p className="text-gray-500 dark:text-gray-400 font-bold mb-4 break-all">{PERSONAL_INFO.phone}</p>
-                        <span className="text-amber-600 dark:text-amber-400 font-black flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
-                            Call Me <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 5l7 7-7 7" /></svg>
                         </span>
                     </a>
                 </div>
