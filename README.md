@@ -66,7 +66,7 @@ Use `.env.example` as the complete list of supported variables. The main groups 
 - `SERVICE_*` for service cards
 - `EXPERIENCE_*` for work history
 
-Do not commit `.env` or `.env.production`. For deployment, configure the same variable names in GitHub repository variables.
+Keep `.env` local for development. For GitHub Pages deployment, commit `.env.production` with public portfolio values so Vite can compile those values into the static site.
 
 ## Local Development
 
@@ -166,22 +166,14 @@ The production output is generated in the `dist` directory.
 
 This project is ready for GitHub Pages hosting through GitHub Actions.
 
-1. Push the repository to GitHub.
-2. In the GitHub repository, open `Settings` > `Secrets and variables` > `Actions` > `Variables`.
-3. Add the same variable names used in `.env.example`, with the production portfolio values.
-4. Open `Settings` > `Pages`.
-5. Set `Build and deployment` > `Source` to `GitHub Actions`.
-6. Push to the `main` or `master` branch.
+1. Push the repository to GitHub, including `.env.production`.
+2. In the GitHub repository, open `Settings` > `Pages`.
+3. Set `Build and deployment` > `Source` to `GitHub Actions`.
+4. Push to the `main` or `master` branch.
 
-The workflow in `.github/workflows/ci.yml` maps GitHub repository variables into the Vite build, then installs dependencies, runs lint, builds the site, and deploys the `dist` folder to GitHub Pages.
+The workflow in `.github/workflows/ci.yml` installs dependencies, runs lint, builds the site with Vite, and deploys the `dist` folder to GitHub Pages. Vite automatically loads `.env.production` during `npm run build`.
 
-To upload the current local `.env` values as GitHub repository variables without committing `.env`, install the GitHub CLI, run `gh auth login`, then run:
-
-```powershell
-.\scripts\set-github-vars.ps1 -Repo chochkimhour/my-portfolio
-```
-
-After the variables are set, push a commit or rerun the GitHub Actions workflow so GitHub Pages rebuilds with those values.
+After `.env.production` is pushed, rerun the GitHub Actions workflow or push a new commit so GitHub Pages rebuilds with those values.
 
 The app is a single scrolling landing page. Section links use simple anchors:
 
