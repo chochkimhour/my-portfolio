@@ -95,7 +95,7 @@ export const UI_TEXT = {
         title: "Featured",
         highlight: "Projects",
         description: "Here are some of my recent works. Each project comes with its own set of challenges, providing me with opportunities to learn and grow.",
-        view_more: "View My Projects"
+        view_more: "View More on GitHub"
     },
     contact: {
         title: "Get In",
