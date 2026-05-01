@@ -71,7 +71,7 @@ export const PERSONAL_INFO = {
     expertise: fromEnvList("EXPERTISE_ITEMS", ["Web Apps", "Performance", "Scalable APIs"]),
     stats: [
         { label: fromEnv("STATS_1_LABEL", "Years Exp."), value: fromEnv("STATS_1_VALUE", "1+") },
-        { label: fromEnv("STATS_2_LABEL", "Projects"), value: fromEnv("STATS_2_VALUE", "1+") }
+        { label: fromEnv("STATS_2_LABEL", "Projects"), value: fromEnv("STATS_2_VALUE", "5") }
     ]
 };
 
