@@ -14,7 +14,7 @@ export default defineConfig({
     'NPM_',
     'PORTFOLIO_',
     'PROJECT_',
-    'API_CORE_BACKEND_',
+    'KHMER_CHHANKITEK_CALENDAR_',
     'INIT_BACKEND_PROJECT_',
     'SKILLS_',
     'EXPERTISE_',

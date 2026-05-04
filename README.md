@@ -60,7 +60,7 @@ Use `.env.example` as the complete list of supported variables. The main groups 
 
 - `USER_*` for name, role, email, and location
 - `GITHUB_URL`, `LINKEDIN_URL`, `NPM_PACKAGE_URL`, `TELEGRAM_*` for public profiles
-- `PROJECT_*`, `PORTFOLIO_*`, `API_CORE_BACKEND_*`, and `INIT_BACKEND_PROJECT_*` for featured projects
+- `PROJECT_*`, `PORTFOLIO_*`, `KHMER_CHHANKITEK_CALENDAR_*`, and `INIT_BACKEND_PROJECT_*` for featured projects
 - `SKILLS_*`, `EXPERTISE_ITEMS`, and `STATS_*` for profile detail
 - `TAGLINE`, `BRAND_DESCRIPTION`, `ABOUT_P1`, `ABOUT_P2`, and `SEO_*` for hero/about/metadata copy
 - `SERVICE_*` for service cards

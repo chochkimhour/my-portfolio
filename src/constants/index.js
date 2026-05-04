@@ -35,12 +35,12 @@ export const PROJECTS = [
     },
     {
         id: 2,
-        title: fromEnv("PROJECT_2_TITLE", "api-core-backend"),
-        description: fromEnv("PROJECT_2_DESCRIPTION", "An npm package for reusable backend API foundations."),
-        tech: fromEnvList("PROJECT_2_TECH", ["Node.js", "Backend", "API", "npm"]),
+        title: fromEnv("PROJECT_2_TITLE", "khmer-chhankitek-calendar"),
+        description: fromEnv("PROJECT_2_DESCRIPTION", "An npm package for working with the Khmer Chhankitek calendar."),
+        tech: fromEnvList("PROJECT_2_TECH", ["JavaScript", "Calendar", "Khmer", "npm"]),
         imageGradient: "from-red-600 to-rose-700",
-        liveUrl: fromEnv("API_CORE_BACKEND_NPM_URL", "https://www.npmjs.com/package/api-core-backend"),
-        githubUrl: fromEnv("API_CORE_BACKEND_REPO_URL", "https://github.com/yourusername/api-core-backend")
+        liveUrl: fromEnv("KHMER_CHHANKITEK_CALENDAR_NPM_URL", "https://www.npmjs.com/package/khmer-chhankitek-calendar"),
+        githubUrl: fromEnv("KHMER_CHHANKITEK_CALENDAR_REPO_URL", "https://github.com/yourusername/khmer-chhankitek-calendar")
     },
     {
         id: 3,
