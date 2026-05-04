@@ -66,7 +66,7 @@ Use `.env.example` as the complete list of supported variables. The main groups 
 - `SERVICE_*` for service cards
 - `EXPERIENCE_*` for work history
 
-Keep `.env` local for development. For GitHub Pages deployment, commit `.env.production` with public portfolio values so Vite can compile those values into the static site.
+Keep `.env` local for development. For GitHub Pages deployment, configure the same public values as GitHub Actions repository variables so Vite can compile those values into the static site without committing env files.
 
 ## Local Development
 
@@ -166,14 +166,14 @@ The production output is generated in the `dist` directory.
 
 This project is ready for GitHub Pages hosting through GitHub Actions.
 
-1. Push the repository to GitHub, including `.env.production`.
+1. Add the public portfolio values from `.env.example` as repository variables in `Settings` > `Secrets and variables` > `Actions` > `Variables`.
 2. In the GitHub repository, open `Settings` > `Pages`.
 3. Set `Build and deployment` > `Source` to `GitHub Actions`.
 4. Push to the `main` or `master` branch.
 
-The workflow in `.github/workflows/ci.yml` installs dependencies, runs lint, builds the site with Vite, and deploys the `dist` folder to GitHub Pages. Vite automatically loads `.env.production` during `npm run build`.
+The workflow in `.github/workflows/ci.yml` installs dependencies, runs lint, builds the site with Vite using repository variables, and deploys the `dist` folder to GitHub Pages.
 
-After `.env.production` is pushed, rerun the GitHub Actions workflow or push a new commit so GitHub Pages rebuilds with those values.
+After the variables are saved, rerun the GitHub Actions workflow or push a new commit so GitHub Pages rebuilds with those values.
 
 The app is a single scrolling landing page. Section links use simple anchors:
 
