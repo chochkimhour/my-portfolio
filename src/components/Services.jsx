@@ -1,53 +1,46 @@
 import { SERVICES, UI_TEXT } from '../constants';
 
+const SectionHeader = ({ slug, title, count }) => (
+    <div className="mb-10">
+        <p className="font-mono text-[11px] uppercase tracking-widest text-neutral-500 dark:text-neutral-400 mb-2">
+            {slug}
+        </p>
+        <h2 className="text-2xl md:text-3xl font-extrabold text-neutral-900 dark:text-neutral-50 tracking-tight">
+            {title}
+            {count !== undefined && (
+                <span className="font-mono text-base font-medium text-neutral-400 dark:text-neutral-500 ml-1">
+                    ({count})
+                </span>
+            )}
+        </h2>
+    </div>
+);
+
 const Services = () => {
     return (
-        <section id="services" className="pt-32 pb-24 px-6 min-h-[calc(100vh-100px)] relative bg-white dark:bg-gray-900 transition-colors duration-200 overflow-hidden section-reveal">
-            {/* 🌋 Unique Background Aura */}
-            <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-amber-500/[0.03] dark:bg-amber-500/[0.02] blur-[150px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+        <section id="services" className="scroll-mt-24">
+            <div className="mx-auto max-w-2xl px-6 py-16">
+                <SectionHeader slug="§ 03 · SERVICES" title="Services" count={SERVICES.length} />
 
-            <div className="max-w-[1920px] mx-auto px-6 sm:px-16 relative z-10">
-                <div className="text-center mb-20 animate-fade-in-up">
-                    <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4">
-                        {UI_TEXT.services.title} <span className="text-amber-600 dark:text-amber-400">{UI_TEXT.services.highlight}</span>
-                    </h2>
-                    <div className="w-24 h-1.5 bg-amber-600 dark:bg-amber-400 mx-auto rounded-full"></div>
-                    <p className="mt-8 text-gray-500 dark:text-gray-400 max-w-2xl mx-auto text-lg leading-relaxed">
-                        {UI_TEXT.services.description}
-                    </p>
-                </div>
+                <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed mb-10">
+                    {UI_TEXT.services.description}
+                </p>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-10">
+                <div className="grid grid-cols-1 gap-px bg-neutral-200 dark:bg-neutral-800 sm:grid-cols-3 overflow-hidden rounded-lg border border-neutral-200 dark:border-neutral-800">
                     {SERVICES.map((service, index) => (
-                        <div 
-                            key={index} 
-                            className="group relative p-10 modern-card hover:border-amber-500/30 hover:-translate-y-3 hover:shadow-2xl hover:shadow-amber-500/10 overflow-hidden"
+                        <div
+                            key={index}
+                            className="bg-white dark:bg-neutral-950 p-6 flex flex-col"
                         >
-                            {/* Animated Background Highlight */}
-                            <div className="absolute -top-20 -right-20 w-40 h-40 bg-amber-500/10 blur-[80px] group-hover:bg-amber-500/20 transition-all duration-500 rounded-full"></div>
-                            
-                            {/* Icon Container */}
-                            <div className="w-16 h-16 mb-8 flex items-center justify-center bg-gray-50 dark:bg-gray-800 text-amber-600 rounded-2xl shadow-inner group-hover:bg-amber-600 group-hover:text-white transition-all duration-500">
-                                {service.icon === 'code' && (
-                                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                                )}
-                                {service.icon === 'server' && (
-                                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg>
-                                )}
-                                {service.icon === 'window' && (
-                                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                                )}
-                            </div>
-
-                            <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-4 tracking-tight drop-shadow-sm group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                            <span className="font-mono text-[10px] text-neutral-400 dark:text-neutral-500 mb-3 tabular-nums">
+                                {String(index + 1).padStart(2, '0')}
+                            </span>
+                            <h3 className="text-base font-bold text-neutral-900 dark:text-neutral-50 mb-2">
                                 {service.title}
                             </h3>
-                            <p className="text-gray-500 dark:text-gray-400 leading-relaxed font-medium">
+                            <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
                                 {service.description}
                             </p>
-
-                            {/* Decorative bottom bar */}
-                            <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-500/40 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
                         </div>
                     ))}
                 </div>

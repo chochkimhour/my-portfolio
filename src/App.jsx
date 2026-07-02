@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense, lazy } from "react";
+import { useState, useEffect, useRef } from "react";
 import Navbar from "./layouts/Navbar";
 import Footer from "./layouts/Footer";
 import Hero from "./components/Hero";
@@ -10,21 +10,36 @@ import Contact from "./components/Contact";
 import ScrollToTop from "./components/ScrollToTop";
 import { SEO_INFO } from "./constants";
 
-// Lazy load heavy components
-const PortfolioAssistant = lazy(() => import("./components/PortfolioAssistant"));
-
 function App() {
+  const hasMounted = useRef(false);
   const [darkMode, setDarkMode] = useState(() =>
     window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false
   );
 
-  // Update HTML class when darkMode changes
   useEffect(() => {
+    let animationTimer;
+
     if (darkMode) {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
+
+    if (hasMounted.current) {
+      document.documentElement.classList.remove("theme-changing");
+      window.requestAnimationFrame(() => {
+        document.documentElement.classList.add("theme-changing");
+      });
+      animationTimer = window.setTimeout(() => {
+        document.documentElement.classList.remove("theme-changing");
+      }, 520);
+    } else {
+      hasMounted.current = true;
+    }
+
+    return () => {
+      if (animationTimer) window.clearTimeout(animationTimer);
+    };
   }, [darkMode]);
 
   useEffect(() => {
@@ -41,13 +56,10 @@ function App() {
   }, []);
 
   return (
-    // This div ensures the page is at least the full height of the screen
-    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 selection:bg-amber-500/30">
-      {/* 1. Header Area */}
+    <div className="min-h-screen flex flex-col bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100">
       <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
 
-      {/* 2. Main Page Content */}
-      <main className="flex-grow flex flex-col relative w-full">
+      <main className="flex-grow">
         <Hero />
         <About />
         <Services />
@@ -56,15 +68,7 @@ function App() {
         <Contact />
       </main>
 
-      {/* 3. Footer Area */}
       <Footer />
-
-      {/* 4. Portfolio Assistant Chatbot */}
-      <Suspense fallback={null}>
-        <PortfolioAssistant />
-      </Suspense>
-
-      {/* 5. Scroll To Top Button */}
       <ScrollToTop />
     </div>
   );

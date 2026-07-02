@@ -1,174 +1,164 @@
 import { useState, useEffect } from 'react';
-import { NAV_LINKS, PERSONAL_INFO } from '../constants';
+import { NAV_LINKS } from '../constants';
+
+const SunIcon = () => (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" aria-hidden="true">
+        <circle cx="12" cy="12" r="4" />
+        <path strokeLinecap="round" d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+    </svg>
+);
+
+const MoonIcon = () => (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" />
+    </svg>
+);
+
+const ThemeButton = ({ darkMode, setDarkMode, className = '' }) => (
+    <button
+        onClick={() => setDarkMode(!darkMode)}
+        className={`theme-toggle ${className}`}
+        aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+    >
+        <span className="theme-toggle__glow" aria-hidden="true"></span>
+        <span className="theme-toggle__icon" key={darkMode ? 'sun' : 'moon'}>
+            {darkMode ? <SunIcon /> : <MoonIcon />}
+        </span>
+    </button>
+);
 
 const Navbar = ({ darkMode, setDarkMode }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [scrollProgress, setScrollProgress] = useState(0);
     const [activeSection, setActiveSection] = useState('home');
-
-    const updateTitle = (name) => {
-        document.title = `${PERSONAL_INFO.name} | ${name}`;
-    };
+    const [scrollProgress, setScrollProgress] = useState(0);
 
     const scrollToSection = (event, link) => {
         event.preventDefault();
         const sectionId = link.href.replace('#', '');
         const target = document.getElementById(sectionId);
-
         if (!target) return;
 
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         window.history.replaceState(null, '', link.href);
         setActiveSection(sectionId);
-        updateTitle(link.name);
         setIsOpen(false);
     };
 
     useEffect(() => {
+        let frameId = null;
+
         const handleScroll = () => {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+            if (frameId) return;
 
-            setScrollProgress(scrolled);
-            setIsScrolled(window.scrollY > 20);
-
-            const currentSection = NAV_LINKS.reduce((current, link) => {
-                const section = document.getElementById(link.href.replace('#', ''));
-                if (!section) return current;
-
-                const sectionTop = section.offsetTop - 140;
-                return window.scrollY >= sectionTop ? link.href.replace('#', '') : current;
-            }, 'home');
-
-            setActiveSection(currentSection);
+            frameId = window.requestAnimationFrame(() => {
+                frameId = null;
+                updateNavState();
+            });
         };
 
-        handleScroll();
+        const updateNavState = () => {
+            const maxScroll =
+                document.documentElement.scrollHeight - window.innerHeight;
+            const nextProgress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+
+            setScrollProgress(Math.min(Math.max(nextProgress, 0), 1));
+
+            const bottomReached =
+                window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+
+            if (bottomReached) {
+                setActiveSection(NAV_LINKS[NAV_LINKS.length - 1].href.replace('#', ''));
+                return;
+            }
+
+            const checkpoint = window.scrollY + window.innerHeight * 0.35;
+            const current = NAV_LINKS.reduce((prev, link) => {
+                const section = document.getElementById(link.href.replace('#', ''));
+                if (!section) return prev;
+                return checkpoint >= section.offsetTop ? link.href.replace('#', '') : prev;
+            }, 'home');
+
+            setActiveSection(current);
+        };
+
+        updateNavState();
+        window.addEventListener('resize', handleScroll);
         window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
+        return () => {
+            if (frameId) window.cancelAnimationFrame(frameId);
+            window.removeEventListener('resize', handleScroll);
+            window.removeEventListener('scroll', handleScroll);
+        };
     }, []);
 
     return (
-        <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 ${isScrolled
-                ? 'bg-white/80 dark:bg-[#030712]/80 backdrop-blur-xl py-3 border-b border-gray-200/50 dark:border-white/5 shadow-lg'
-                : 'bg-transparent py-5'
-            }`}>
-            <div className="max-w-[1920px] mx-auto px-6 sm:px-12 flex items-center justify-between transition-all duration-300">
-
-                {/* LOGO & STATUS */}
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 group">
-                    <a
-                        href="#home"
-                        onClick={(event) => scrollToSection(event, NAV_LINKS[0])}
-                        className={`font-extrabold text-2xl tracking-tight transition-colors duration-300 cursor-pointer ${isScrolled ? 'text-gray-900 dark:text-white' : 'text-gray-900 dark:text-white'}`}
-                    >
-                        <span className="mr-3 inline-flex items-center justify-center w-10 h-10 rounded-full bg-amber-600/10 dark:bg-white/10 border border-amber-600/20 dark:border-white/20 shadow-inner group-hover:scale-110 transition-all duration-300">
-                            <span className="animate-coding text-amber-600 dark:text-amber-400" aria-hidden="true">
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 9 5 12l3 3m8-6 3 3-3 3M14 6l-4 12" />
-                                </svg>
-                            </span>
-                        </span> {PERSONAL_INFO.name}
-                    </a>
-                </div>
-
-                {/* DESKTOP MENU */}
-                <div className="hidden lg:flex space-x-8 text-white/90 font-bold items-center">
+        <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 dark:bg-neutral-950/80 backdrop-blur border-b border-neutral-200 dark:border-neutral-800">
+            <div className="mx-auto max-w-2xl px-6 h-16 flex items-center justify-between gap-4 md:justify-center">
+                <div className="hidden md:flex items-center gap-8">
                     {NAV_LINKS.map((link) => {
                         const isActive = activeSection === link.href.replace('#', '');
                         return (
                             <a
                                 key={link.name}
                                 href={link.href}
-                                onClick={(event) => scrollToSection(event, link)}
-                                className={`relative group py-1 text-[11px] uppercase font-bold tracking-[0.2em] transition-all ${isActive
-                                    ? 'text-amber-600 dark:text-amber-400'
-                                    : 'text-gray-600 dark:text-gray-400 hover:text-amber-600 dark:hover:text-amber-400'}`}
+                                onClick={(e) => scrollToSection(e, link)}
+                                className={`relative text-sm transition-colors after:absolute after:left-0 after:-bottom-1 after:h-px after:bg-current after:transition-all after:duration-200 ${
+                                    isActive
+                                        ? 'text-neutral-900 after:w-full dark:text-neutral-50'
+                                        : 'text-neutral-500 after:w-0 hover:text-neutral-900 hover:after:w-full dark:text-neutral-400 dark:hover:text-neutral-50'
+                                }`}
                             >
                                 {link.name}
-                                <span className={`absolute -bottom-1.5 left-0 h-[2px] bg-amber-600 dark:bg-amber-400 transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
                             </a>
                         );
                     })}
-                    {/* DESKTOP THEME SWITCH */}
-                    <button
-                        onClick={() => setDarkMode(!darkMode)}
-                        className="relative w-14 h-7 rounded-full bg-gray-200 dark:bg-amber-900/40 p-1 transition-colors duration-300 focus:outline-none group border border-gray-300/30 dark:border-amber-400/20"
-                        aria-label="Toggle Dark Mode"
-                    >
-                        <div className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white dark:bg-amber-400 shadow-md transform transition-transform duration-300 flex items-center justify-center ${darkMode ? 'translate-x-7' : 'translate-x-0'}`}>
-                            {darkMode ? (
-                                <svg className="w-3 h-3 text-amber-900" fill="currentColor" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
-                            ) : (
-                                <svg className="w-3.5 h-3.5 text-amber-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 7a5 5 0 100 10 5 5 0 000-10zM2 13h2a1 1 0 100-2H2a1 1 0 100 2zm18 0h2a1 1 0 100-2h-2a1 1 0 100 2zM11 2v2a1 1 0 102 0V2a1 1 0 10-2 0zm0 18v2a1 1 0 102 0v-2a1 1 0 10-2 0zM5.99 4.576a1 1 0 10-1.414 1.414l1.414-1.414zM18.01 16.586a1 1 0 10-1.414 1.414l1.414-1.414zM4.576 18.01a1 1 0 101.414 1.414L4.576 18.01zM16.586 5.99a1 1 0 101.414 1.414L16.586 5.99z" /></svg>
-                            )}
-                        </div>
-                    </button>
+                    <ThemeButton darkMode={darkMode} setDarkMode={setDarkMode} />
                 </div>
 
-                {/* MOBILE BUTTONS (Only visible on Medium/Small screens) */}
-                <div className="flex items-center space-x-2 lg:hidden">
-                    {/* MOBILE THEME SWITCH */}
+                <div className="flex w-full items-center justify-between md:hidden">
                     <button
-                        onClick={() => setDarkMode(!darkMode)}
-                        className="relative w-12 h-6 rounded-full bg-gray-200 dark:bg-amber-900/40 p-0.5 transition-colors duration-300 focus:outline-none group border border-gray-300/30 dark:border-amber-400/20"
-                        aria-label="Toggle Dark Mode"
-                    >
-                        <div className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white dark:bg-amber-400 shadow-md transform transition-transform duration-300 flex items-center justify-center ${darkMode ? 'translate-x-6' : 'translate-x-0'}`}>
-                            {darkMode ? (
-                                <svg className="w-3 h-3 text-amber-900" fill="currentColor" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
-                            ) : (
-                                <svg className="w-3.5 h-3.5 text-amber-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 7a5 5 0 100 10 5 5 0 000-10zM2 13h2a1 1 0 100-2H2a1 1 0 100 2zm18 0h2a1 1 0 100-2h-2a1 1 0 100 2zM11 2v2a1 1 0 102 0V2a1 1 0 10-2 0zm0 18v2a1 1 0 102 0v-2a1 1 0 10-2 0zM5.99 4.576a1 1 0 10-1.414 1.414l1.414-1.414zM18.01 16.586a1 1 0 10-1.414 1.414l1.414-1.414zM4.576 18.01a1 1 0 101.414 1.414L4.576 18.01zM16.586 5.99a1 1 0 101.414 1.414L16.586 5.99z" /></svg>
-                            )}
-                        </div>
-                    </button>
-
-                    <button
-                        className={`p-2 relative w-10 h-10 flex items-center justify-center focus:outline-none ${isScrolled ? 'text-gray-900 dark:text-white' : 'text-gray-900 dark:text-white'}`}
                         onClick={() => setIsOpen(!isOpen)}
-                        aria-label="Toggle Menu"
+                        className="w-8 h-8 flex flex-col items-center justify-center gap-1.5"
+                        aria-label="Toggle menu"
+                        aria-expanded={isOpen}
                     >
-                        {/* Animated Hamburger Icon */}
-                        <div className="flex flex-col items-center justify-center w-6 h-6">
-                            <span className={`block w-6 h-0.5 bg-current rounded-full transition-all duration-300 transform ${isOpen ? 'rotate-45 translate-y-1' : ''}`}></span>
-                            <span className={`block w-6 h-0.5 bg-current rounded-full my-1 transition-all duration-300 ${isOpen ? 'opacity-0' : 'opacity-100'}`}></span>
-                            <span className={`block w-6 h-0.5 bg-current rounded-full transition-all duration-300 transform ${isOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
-                        </div>
+                        <span className={`block w-5 h-px bg-neutral-900 dark:bg-neutral-50 transition-transform ${isOpen ? 'translate-y-[3px] rotate-45' : ''}`}></span>
+                        <span className={`block w-5 h-px bg-neutral-900 dark:bg-neutral-50 transition-transform ${isOpen ? '-translate-y-[3px] -rotate-45' : ''}`}></span>
                     </button>
+                    <ThemeButton darkMode={darkMode} setDarkMode={setDarkMode} />
                 </div>
             </div>
 
-            <div className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out border-gray-200/50 dark:border-white/5 ${isOpen ? 'max-h-[500px] border-t opacity-100' : 'max-h-0 border-t-0 opacity-0'
-                }`}>
-                <div className="bg-white/95 dark:bg-[#030712]/95 backdrop-blur-2xl py-6 px-6 flex flex-col space-y-2">
-                    {NAV_LINKS.map((link) => {
-                        const isActive = activeSection === link.href.replace('#', '');
-                        return (
-                            <a
-                                key={link.name}
-                                href={link.href}
-                                className={`font-bold py-3 px-4 rounded-xl transition-all ${isActive
-                                    ? 'bg-amber-600 text-white shadow-lg'
-                                    : 'text-gray-700 dark:text-gray-300 hover:bg-amber-50 dark:hover:bg-amber-900/20 hover:text-amber-600 dark:hover:text-amber-400'
+            <div className="absolute bottom-0 left-0 h-px w-full bg-neutral-200 dark:bg-neutral-800" aria-hidden="true">
+                <span
+                    className="block h-full w-full origin-left bg-neutral-900 will-change-transform dark:bg-neutral-50"
+                    style={{ transform: `scaleX(${scrollProgress})` }}
+                ></span>
+            </div>
+
+            {isOpen && (
+                <div className="md:hidden border-t border-neutral-200 dark:border-neutral-800">
+                    <div className="mx-auto max-w-2xl px-6 py-4 flex flex-col gap-3">
+                        {NAV_LINKS.map((link) => {
+                            const isActive = activeSection === link.href.replace('#', '');
+                            return (
+                                <a
+                                    key={link.name}
+                                    href={link.href}
+                                    onClick={(e) => scrollToSection(e, link)}
+                                    className={`text-sm py-1 underline-offset-4 ${
+                                        isActive
+                                            ? 'text-neutral-900 underline dark:text-neutral-50'
+                                            : 'text-neutral-500 no-underline dark:text-neutral-400'
                                     }`}
-                                onClick={(event) => scrollToSection(event, link)}
-                            >
-                                {link.name}
-                            </a>
-                        );
-                    })}
+                                >
+                                    {link.name}
+                                </a>
+                            );
+                        })}
+                    </div>
                 </div>
-            </div>
-
-            {/* Premium Scroll Progress Line */}
-            <div className="absolute bottom-0 left-0 h-[2px] w-full bg-gray-200/20 dark:bg-white/5 pointer-events-none">
-                <div
-                    className="h-full bg-gradient-to-r from-amber-600 via-amber-400 to-amber-600 shadow-[0_0_10px_rgba(217,119,6,0.3)] transition-all duration-100"
-                    style={{ width: `${scrollProgress}%` }}
-                ></div>
-            </div>
+            )}
         </nav>
     );
 };

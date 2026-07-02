@@ -1,70 +1,88 @@
-import { EXPERIENCE, UI_TEXT } from '../constants';
+import { EXPERIENCE } from '../constants';
 
-const formatPeriod = (startStr, endStr) => {
+const SectionHeader = ({ slug, title, count }) => (
+    <div className="mb-10">
+        <p className="font-mono text-[11px] uppercase tracking-widest text-neutral-500 dark:text-neutral-400 mb-2">
+            {slug}
+        </p>
+        <h2 className="text-2xl md:text-3xl font-extrabold text-neutral-900 dark:text-neutral-50 tracking-tight">
+            {title}
+            {count !== undefined && (
+                <span className="font-mono text-base font-medium text-neutral-400 dark:text-neutral-500 ml-1">
+                    ({count})
+                </span>
+            )}
+        </h2>
+    </div>
+);
+
+const formatDate = (dateStr) => {
+    if (!dateStr) return 'Present';
+    const d = new Date(dateStr);
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    return `${dd}.${mm}.${d.getFullYear()}`;
+};
+
+const computeDuration = (startStr, endStr) => {
     const start = new Date(startStr);
     const end = endStr ? new Date(endStr) : new Date();
-
-    const options = { month: 'short', year: 'numeric' };
-    const startFormatted = start.toLocaleDateString('en-US', options);
-    const endFormatted = endStr ? end.toLocaleDateString('en-US', options) : 'Present';
-
-    // Calculate total months
     let months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
-
-    // Convert to readable Years + Months
     const years = Math.floor(months / 12);
-    const remainingMonths = months % 12;
-
-    let duration = "";
-    if (years > 0) duration += `${years} yr${years > 1 ? 's' : ''} `;
-    if (remainingMonths > 0) duration += `${remainingMonths} mo${remainingMonths > 1 ? 's' : ''}`;
-    if (!duration) duration = "1 mo"; // Edge case
-
-    return `${startFormatted} — ${endFormatted} (${duration.trim()})`;
+    const rem = months % 12;
+    let out = '';
+    if (years > 0) out += `${years} yr${years > 1 ? 's' : ''} `;
+    if (rem > 0) out += `${rem} mo${rem > 1 ? 's' : ''}`;
+    return out.trim() || '1 mo';
 };
+
+const MetaRow = ({ label, children }) => (
+    <div className="grid grid-cols-[110px_1fr] gap-4 py-1.5">
+        <dt className="font-mono text-xs uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+            {label}
+        </dt>
+        <dd className="text-sm text-neutral-800 dark:text-neutral-200">
+            {children}
+        </dd>
+    </div>
+);
 
 const Experience = () => {
     return (
-        <section id="experience" className="pt-32 pb-24 px-6 min-h-[calc(100vh-100px)] bg-gray-50 dark:bg-gray-800/20 border-y border-gray-100 dark:border-gray-800/50 transition-colors duration-200 section-reveal">
-            <div className="max-w-[1920px] mx-auto px-6 sm:px-16">
-                <div className="text-center mb-20 animate-fade-in-up">
-                    <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4">
-                        {UI_TEXT.experience.title} <span className="text-amber-600 dark:text-amber-400">{UI_TEXT.experience.highlight}</span>
-                    </h2>
-                    <div className="w-24 h-1.5 bg-amber-600 dark:bg-amber-400 mx-auto rounded-full"></div>
-                </div>
+        <section id="experience" className="scroll-mt-24">
+            <div className="mx-auto max-w-2xl px-6 py-16">
+                <SectionHeader slug="§ 04 · EXPERIENCE" title="Experience" count={EXPERIENCE.length} />
 
-                <div className="max-w-4xl mx-auto space-y-8 sm:space-y-12">
+                <ul className="space-y-10">
                     {EXPERIENCE.map((exp, index) => (
-                        <div key={index} className="flex gap-4 sm:gap-8 group">
-                            {/* Roadmap / Timeline marker */}
-                            <div className="flex flex-col items-center">
-                                <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border-[3px] sm:border-4 border-amber-500 bg-white dark:bg-gray-900 z-10 group-hover:scale-125 group-hover:bg-amber-500 transition-all duration-300 shadow-lg shadow-amber-500/20"></div>
-                                {index !== EXPERIENCE.length - 1 && (
-                                    <div className="w-0.5 sm:w-1 flex-grow bg-gradient-to-b from-amber-500 to-transparent my-1"></div>
-                                )}
+                        <li key={index} className="border-t border-neutral-200 dark:border-neutral-800 pt-6">
+                            <div className="flex items-baseline justify-between gap-4 mb-4">
+                                <h3 className="text-lg font-bold text-neutral-900 dark:text-neutral-50">
+                                    {exp.role}
+                                </h3>
+                                <span className="font-mono text-xs text-neutral-400 dark:text-neutral-500 tabular-nums">
+                                    {String(index + 1).padStart(2, '0')}
+                                </span>
                             </div>
 
-                            {/* Content Card */}
-                            <div className="flex-grow pb-8 sm:pb-12">
-                                <div className="modern-card p-6 sm:p-8 hover:shadow-amber-500/10 hover:-translate-y-2">
-                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 mb-4">
-                                        <div>
-                                            <h3 className="text-xl sm:text-2xl font-black text-gray-900 dark:text-white leading-tight">{exp.role}</h3>
-                                            <p className="text-sm sm:text-base text-amber-600 dark:text-amber-400 font-bold">{exp.company}</p>
-                                        </div>
-                                        <span className="px-4 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-full text-[10px] sm:text-xs font-black self-start tracking-wider uppercase">
-                                            {formatPeriod(exp.startDate, exp.endDate)}
-                                        </span>
-                                    </div>
-                                    <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 leading-relaxed font-medium">
-                                        {exp.description}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                            <dl className="mb-4">
+                                <MetaRow label="Company">{exp.company}</MetaRow>
+                                <MetaRow label="Period">
+                                    <span className="font-mono tabular-nums">
+                                        {formatDate(exp.startDate)} — {formatDate(exp.endDate)}
+                                    </span>
+                                </MetaRow>
+                                <MetaRow label="Duration">
+                                    <span className="font-mono">{computeDuration(exp.startDate, exp.endDate)}</span>
+                                </MetaRow>
+                            </dl>
+
+                            <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                                {exp.description}
+                            </p>
+                        </li>
                     ))}
-                </div>
+                </ul>
             </div>
         </section>
     );
