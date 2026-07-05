@@ -16,7 +16,7 @@ const highlightJson = (obj) => {
     const json = JSON.stringify(obj, null, 2);
     const tokens = [];
     // Regex to match JSON tokens: keys, strings, numbers, booleans, null, brackets, colons, commas
-    const re = /("(?:\\.|[^"\\])*")\s*:|("(?:\\.|[^"\\])*")|(\b-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b)|(\btrue\b|\bfalse\b)|(\bnull\b)|([{}\[\]]|,|:)/g;
+    const re = /("(?:\\.|[^"\\])*")\s*:|("(?:\\.|[^"\\])*")|(\b-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b)|(\btrue\b|\bfalse\b)|(\bnull\b)|([{}[\]]|,|:)/g;
     let lastIndex = 0;
     let match;
 
@@ -324,13 +324,12 @@ const ApiPlayground = () => {
         const headers = buildHeaders(scenario, bodyStr);
         const t = buildTiming();
 
-        const start = performance.now();
         // Simulate network latency with more realistic breakdown
         const networkLatency = t.dns + t.tcp + t.tls;
-        const serverLatency = 40 + Math.random() * 120;
-        const totalLatency = networkLatency + serverLatency;
 
         timerRef.current = window.setTimeout(() => {
+            const serverLatency = 40 + Math.random() * 120;
+            const totalLatency = networkLatency + serverLatency;
             t.response = serverLatency;
             setTiming(t);
             setResponse(resolvedBody);
@@ -340,7 +339,7 @@ const ApiPlayground = () => {
             setStatusText(scenario.statusText);
             setResponseSize(bodyStr.length);
             setLoading(false);
-        }, totalLatency);
+        }, networkLatency);
     };
 
     const handleCopy = useCallback(async () => {

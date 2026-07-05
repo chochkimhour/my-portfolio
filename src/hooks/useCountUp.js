@@ -4,15 +4,14 @@ export const useCountUp = (target, isActive, duration = 1500) => {
     const [count, setCount] = useState(0);
 
     useEffect(() => {
-        if (!isActive || target <= 0) {
-            setCount(0);
-            return;
-        }
+        if (!isActive || target <= 0) return;
 
+        let cancelled = false;
         const start = performance.now();
         let frameId;
 
         const animate = (now) => {
+            if (cancelled) return;
             const elapsed = now - start;
             const progress = Math.min(elapsed / duration, 1);
             // Ease-out cubic
@@ -25,7 +24,10 @@ export const useCountUp = (target, isActive, duration = 1500) => {
         };
 
         frameId = requestAnimationFrame(animate);
-        return () => cancelAnimationFrame(frameId);
+        return () => {
+            cancelled = true;
+            cancelAnimationFrame(frameId);
+        };
     }, [target, isActive, duration]);
 
     return count;
