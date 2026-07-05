@@ -1,4 +1,5 @@
 import { EXPERIENCE } from '../constants';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 const SectionHeader = ({ slug, title, count }) => (
     <div className="mb-10">
@@ -48,41 +49,48 @@ const MetaRow = ({ label, children }) => (
 );
 
 const Experience = () => {
+    const [headerRef, headerVisible] = useScrollReveal();
+    const [listRef, listVisible] = useScrollReveal();
+
     return (
         <section id="experience" className="scroll-mt-24">
             <div className="mx-auto max-w-2xl px-6 py-16">
-                <SectionHeader slug="§ 04 · EXPERIENCE" title="Experience" count={EXPERIENCE.length} />
+                <div ref={headerRef} className={`reveal ${headerVisible ? 'is-visible' : ''}`}>
+                    <SectionHeader slug="§ 04 · EXPERIENCE" title="Experience" count={EXPERIENCE.length} />
+                </div>
 
-                <ul className="space-y-10">
-                    {EXPERIENCE.map((exp, index) => (
-                        <li key={index} className="border-t border-neutral-200 dark:border-neutral-800 pt-6">
-                            <div className="flex items-baseline justify-between gap-4 mb-4">
-                                <h3 className="text-lg font-bold text-neutral-900 dark:text-neutral-50">
-                                    {exp.role}
-                                </h3>
-                                <span className="font-mono text-xs text-neutral-400 dark:text-neutral-500 tabular-nums">
-                                    {String(index + 1).padStart(2, '0')}
-                                </span>
-                            </div>
-
-                            <dl className="mb-4">
-                                <MetaRow label="Company">{exp.company}</MetaRow>
-                                <MetaRow label="Period">
-                                    <span className="font-mono tabular-nums">
-                                        {formatDate(exp.startDate)} — {formatDate(exp.endDate)}
+                <div ref={listRef} className={`reveal ${listVisible ? 'is-visible' : ''}`}>
+                    <ul className="space-y-10">
+                        {EXPERIENCE.map((exp, index) => (
+                            <li key={index} className="group border-t border-neutral-200 dark:border-neutral-800 pt-6 transition-colors hover:bg-neutral-50/50 dark:hover:bg-neutral-900/30 -mx-4 px-4 rounded-lg border-l-4 border-l-transparent hover:border-l-amber-500/60 dark:hover:border-l-amber-400/60">
+                                <div className="flex items-baseline justify-between gap-4 mb-4">
+                                    <h3 className="text-lg font-bold text-neutral-900 dark:text-neutral-50">
+                                        {exp.role}
+                                    </h3>
+                                    <span className="font-mono text-xs text-neutral-400 dark:text-neutral-500 tabular-nums">
+                                        {String(index + 1).padStart(2, '0')}
                                     </span>
-                                </MetaRow>
-                                <MetaRow label="Duration">
-                                    <span className="font-mono">{computeDuration(exp.startDate, exp.endDate)}</span>
-                                </MetaRow>
-                            </dl>
+                                </div>
 
-                            <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
-                                {exp.description}
-                            </p>
-                        </li>
-                    ))}
-                </ul>
+                                <dl className="mb-4">
+                                    <MetaRow label="Company">{exp.company}</MetaRow>
+                                    <MetaRow label="Period">
+                                        <span className="font-mono tabular-nums">
+                                            {formatDate(exp.startDate)} — {formatDate(exp.endDate)}
+                                        </span>
+                                    </MetaRow>
+                                    <MetaRow label="Duration">
+                                        <span className="font-mono">{computeDuration(exp.startDate, exp.endDate)}</span>
+                                    </MetaRow>
+                                </dl>
+
+                                <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                                    {exp.description}
+                                </p>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
         </section>
     );

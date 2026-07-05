@@ -36,7 +36,7 @@ const Contact = () => {
                     {links.map((link) => (
                         <div
                             key={link.label}
-                            className="bg-white dark:bg-neutral-950 p-5"
+                            className="group bg-white dark:bg-neutral-950 p-5 transition-all hover:bg-neutral-50 dark:hover:bg-neutral-900 hover:shadow-md hover:scale-[1.02]"
                         >
                             <dt className="font-mono text-[10px] uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
                                 {link.label}
@@ -46,9 +46,9 @@ const Contact = () => {
                                     href={link.href}
                                     target={link.href.startsWith('mailto:') ? undefined : '_blank'}
                                     rel="noopener noreferrer"
-                                    className="text-sm text-neutral-900 dark:text-neutral-100 underline underline-offset-4 decoration-neutral-300 dark:decoration-neutral-700 hover:decoration-neutral-900 dark:hover:decoration-neutral-100 transition-colors break-all"
+                                    className="text-sm text-neutral-900 dark:text-neutral-100 underline underline-offset-4 decoration-neutral-300 dark:decoration-neutral-700 group-hover:decoration-neutral-900 dark:group-hover:decoration-neutral-100 transition-colors break-all"
                                 >
-                                    {link.value} ↗
+                                    {link.value}
                                 </a>
                             </dd>
                         </div>

@@ -7,6 +7,7 @@ import Services from "./components/Services";
 import Experience from "./components/Experience";
 import Projects from "./components/Projects";
 import Contact from "./components/Contact";
+import ApiPlayground from "./components/ApiPlayground";
 import ScrollToTop from "./components/ScrollToTop";
 import { SEO_INFO } from "./constants";
 
@@ -56,11 +57,15 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100">
+    <div className="min-h-screen flex flex-col text-neutral-900 dark:text-neutral-100">
+      <div className="site-bg" aria-hidden="true">
+        <div className="site-bg__rails" />
+      </div>
       <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
 
       <main className="flex-grow">
         <Hero />
+        <ApiPlayground />
         <About />
         <Services />
         <Experience />

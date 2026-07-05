@@ -18,6 +18,63 @@ body {
   @apply bg-neutral-950 text-neutral-100;
 }
 
+/* chanhdai.com-style background: centered column framed by vertical guide
+   lines, with diagonal hatch stripes filling the side margins. Fixed layer. */
+.site-bg {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+}
+
+.site-bg__rails {
+  position: absolute;
+  inset: 0;
+  max-width: 1024px;
+  margin-inline: auto;
+  border-inline: 1px solid rgba(23, 23, 23, 0.08);
+}
+
+.dark .site-bg__rails {
+  border-color: rgba(245, 245, 245, 0.08);
+}
+
+/* diagonal stripes painted only in the margins outside the centered column */
+.site-bg__rails::before,
+.site-bg__rails::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50vw;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(23, 23, 23, 0.045) 0,
+    rgba(23, 23, 23, 0.045) 1px,
+    transparent 1px,
+    transparent 10px
+  );
+}
+
+.dark .site-bg__rails::before,
+.dark .site-bg__rails::after {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(245, 245, 245, 0.05) 0,
+    rgba(245, 245, 245, 0.05) 1px,
+    transparent 1px,
+    transparent 10px
+  );
+}
+
+.site-bg__rails::before {
+  right: 100%;
+}
+
+.site-bg__rails::after {
+  left: 100%;
+}
+
 body::before {
   content: "";
   pointer-events: none;
@@ -233,14 +290,154 @@ body *::after {
   }
 }
 
+/* ===============================
+   API Playground Shimmer
+   =============================== */
+
+.shimmer-line {
+  height: 0.75rem;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    #e5e5e5 0%,
+    #f5f5f5 50%,
+    #e5e5e5 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-slide 1.4s ease-in-out infinite;
+}
+
+.dark .shimmer-line {
+  background: linear-gradient(
+    90deg,
+    #262626 0%,
+    #404040 50%,
+    #262626 100%
+  );
+  background-size: 200% 100%;
+}
+
+@keyframes shimmer-slide {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* JSON syntax highlighting */
+.json-key { color: #0550ae; }
+.dark .json-key { color: #79c0ff; }
+
+.json-string { color: #0a3069; }
+.dark .json-string { color: #a5d6ff; }
+
+.json-number { color: #0550ae; }
+.dark .json-number { color: #79c0ff; }
+
+.json-boolean { color: #cf222e; }
+.dark .json-boolean { color: #ff7b72; }
+
+.json-null { color: #cf222e; }
+.dark .json-null { color: #ff7b72; }
+
+.json-bracket { color: #656d76; }
+.dark .json-bracket { color: #8b949e; }
+
+.json-colon { color: #656d76; }
+.dark .json-colon { color: #8b949e; }
+
+.json-comma { color: #656d76; }
+.dark .json-comma { color: #8b949e; }
+
+/* Status badge animation */
+@keyframes status-pop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.status-badge {
+  animation: status-pop 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ===============================
+   Scroll Reveal Animations
+   =============================== */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 {
+  transition-delay: 80ms;
+}
+.reveal-delay-2 {
+  transition-delay: 160ms;
+}
+.reveal-delay-3 {
+  transition-delay: 240ms;
+}
+.reveal-delay-4 {
+  transition-delay: 320ms;
+}
+
+/* ===============================
+   Hover Lift Utility
+   =============================== */
+
+.card-lift {
+  transition:
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(23, 23, 23, 0.1);
+}
+
+.dark .card-lift:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+.card-glow {
+  transition: box-shadow 300ms ease;
+}
+
+.card-glow:hover {
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.15);
+}
+
+.dark .card-glow:hover {
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.08);
+}
+
 @media (prefers-reduced-motion: reduce) {
   body::before,
   body *,
   body *::before,
   body *::after,
   .profile-image *,
-  .profile-image *::after {
+  .profile-image *::after,
+  .reveal {
     animation: none !important;
     transition-duration: 1ms !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

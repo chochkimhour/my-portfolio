@@ -9,6 +9,7 @@ const userRole = fromEnv("USER_ROLE", "Your Role");
 
 export const NAV_LINKS = [
     { name: "Home", href: "#home" },
+    { name: "API", href: "#playground" },
     { name: "About", href: "#about" },
     { name: "Services", href: "#services" },
     { name: "Experience", href: "#experience" },
@@ -29,7 +30,8 @@ export const PROJECTS = [
         title: fromEnv("PROJECT_1_TITLE", "My Portfolio"),
         description: fromEnv("PROJECT_1_DESCRIPTION", "A responsive personal portfolio built as a single-page React landing experience."),
         tech: fromEnvList("PROJECT_1_TECH", ["React", "Vite", "Tailwind CSS"]),
-        imageGradient: "from-amber-500 to-orange-600",
+        type: "Web app",
+        primaryLabel: "View live",
         liveUrl: fromEnv("PORTFOLIO_URL", "https://yourusername.github.io/my-portfolio/"),
         githubUrl: fromEnv("PORTFOLIO_REPO_URL", "https://github.com/yourusername/my-portfolio")
     },
@@ -38,7 +40,8 @@ export const PROJECTS = [
         title: fromEnv("PROJECT_2_TITLE", "khmer-chhankitek-calendar"),
         description: fromEnv("PROJECT_2_DESCRIPTION", "An npm package for working with the Khmer Chhankitek calendar."),
         tech: fromEnvList("PROJECT_2_TECH", ["JavaScript", "Calendar", "Khmer", "npm"]),
-        imageGradient: "from-red-600 to-rose-700",
+        type: "npm package",
+        primaryLabel: "View on npm",
         liveUrl: fromEnv("KHMER_CHHANKITEK_CALENDAR_NPM_URL", "https://www.npmjs.com/package/khmer-chhankitek-calendar"),
         githubUrl: fromEnv("KHMER_CHHANKITEK_CALENDAR_REPO_URL", "https://github.com/yourusername/khmer-chhankitek-calendar")
     },
@@ -47,7 +50,8 @@ export const PROJECTS = [
         title: fromEnv("PROJECT_3_TITLE", "init-backend-project"),
         description: fromEnv("PROJECT_3_DESCRIPTION", "A backend starter utility published on npm."),
         tech: fromEnvList("PROJECT_3_TECH", ["Node.js", "CLI", "Scaffolding", "npm"]),
-        imageGradient: "from-blue-600 to-indigo-700",
+        type: "npm package",
+        primaryLabel: "View on npm",
         liveUrl: fromEnv("INIT_BACKEND_PROJECT_NPM_URL", "https://www.npmjs.com/package/init-backend-project"),
         githubUrl: fromEnv("INIT_BACKEND_PROJECT_REPO_URL", "https://github.com/yourusername/init-backend-project")
     }
@@ -126,22 +130,6 @@ export const UI_TEXT = {
         navigation: "Navigation",
         social: "Social Connect",
         contact: "Contact"
-    },
-    bot: {
-        assistant_name: "Assistant Bot",
-        welcome_message: (name) => `Hello! I'm ${name}'s digital assistant. How can I help you today?`,
-        active_status: "Active",
-        placeholder: (name) => `Ask about ${name.split(' ')[0]}...`,
-        suggested_questions: [
-            "What are your core skills?",
-            "Tell me about your projects.",
-            "How can I contact you?",
-            "Are you available for hire?"
-        ]
-    },
-    robot: {
-        greetings: ["HELLO! 👋", "HI THERE! 👋", "GM! ☕", "LET'S BUILD! 🚀", "I'M WATCHING!"],
-        default_greeting: "I'M WATCHING!"
     }
 };
 

@@ -146,10 +146,10 @@ const Navbar = ({ darkMode, setDarkMode }) => {
                                     key={link.name}
                                     href={link.href}
                                     onClick={(e) => scrollToSection(e, link)}
-                                    className={`text-sm py-1 underline-offset-4 ${
+                                    className={`text-sm py-1 underline-offset-4 transition-all ${
                                         isActive
                                             ? 'text-neutral-900 underline dark:text-neutral-50'
-                                            : 'text-neutral-500 no-underline dark:text-neutral-400'
+                                            : 'text-neutral-500 no-underline dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 hover:pl-2'
                                     }`}
                                 >
                                     {link.name}
