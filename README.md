@@ -196,4 +196,4 @@ The workflow runs on pushes and pull requests targeting `main` or `master` and p
 
 This project is licensed under the MIT License. See `LICENSE` for details.
 
-Copyright (c) 2026.
+Copyright (c) 2026 Choch Kimhour.
