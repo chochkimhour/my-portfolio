@@ -209,6 +209,7 @@ body *::after {
     transform: rotate(0deg) scale(1);
   }
 }
+}
 
 @keyframes theme-bg-wash {
   0% {
@@ -224,70 +225,122 @@ body *::after {
   }
 }
 
+/* ─── Profile Image ─── */
+
 .profile-image {
   isolation: isolate;
+  cursor: pointer;
+  transition: transform 450ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.profile-image:hover,
+.profile-image:focus-within {
+  transform: translateY(-4px) scale(1.03);
 }
 
 .profile-image__ring,
 .profile-image__shine {
   pointer-events: none;
   position: absolute;
-  inset: 0;
-  border-radius: 9999px;
+  inset: -4px;
+  border-radius: 16px;
 }
 
 .profile-image__ring {
-  z-index: 0;
-  background:
-    conic-gradient(from 140deg, #f97316, #0ea5e9, #a3e635, #f97316);
+  z-index: -1;
+  background: conic-gradient(
+    from 180deg at 50% 50%,
+    #0ea5e9,
+    #a855f7,
+    #ec4899,
+    #f97316,
+    #84cc16,
+    #0ea5e9
+  );
+  background-size: 200% 200%;
   opacity: 0;
-  transform: scale(0.96) rotate(0deg);
+  transform: scale(0.88) rotate(-90deg);
   transition:
-    opacity 500ms ease,
-    transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.profile-image:hover .profile-image__ring,
+.profile-image:focus-within .profile-image__ring {
+  opacity: 0.75;
+  transform: scale(1.08) rotate(0deg);
+  animation: ring-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes ring-glow {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(45deg);
+  }
 }
 
 .profile-image__shine {
   z-index: 20;
   overflow: hidden;
+  border-radius: 12px;
   opacity: 0;
-  transform: scale(1.04);
-  transition: opacity 250ms ease;
-}
-
-.profile-image__shine::after {
-  content: "";
-  position: absolute;
-  inset: -35%;
-  background: linear-gradient(
-    115deg,
-    transparent 35%,
-    rgba(255, 255, 255, 0.5) 48%,
-    transparent 62%
-  );
-  transform: translateX(-70%) rotate(8deg);
-}
-
-.profile-image:hover .profile-image__ring,
-.profile-image:focus-within .profile-image__ring {
-  opacity: 1;
-  transform: scale(1.12) rotate(135deg);
+  transform: scale(1.02);
+  transition:
+    opacity 400ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .profile-image:hover .profile-image__shine,
 .profile-image:focus-within .profile-image__shine {
   opacity: 1;
+  transform: scale(1);
+}
+
+.profile-image__shine::after {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.35) 45%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0.35) 55%,
+    transparent 70%
+  );
+  transform: translateX(-100%) rotate(12deg);
+  transition: none;
 }
 
 .profile-image:hover .profile-image__shine::after,
 .profile-image:focus-within .profile-image__shine::after {
-  animation: profile-shine 750ms ease forwards;
+  animation: profile-shine-sweep 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-@keyframes profile-shine {
-  to {
-    transform: translateX(70%) rotate(8deg);
+@keyframes profile-shine-sweep {
+  0% {
+    transform: translateX(-100%) rotate(12deg);
   }
+  100% {
+    transform: translateX(100%) rotate(12deg);
+  }
+}
+
+/* subtle float on idle */
+@keyframes profile-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.profile-image:not(:hover):not(:focus-within) {
+  animation: profile-float 4s ease-in-out infinite;
 }
 
 /* ===============================
@@ -381,6 +434,30 @@ body *::after {
 .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ===============================
+   Chatbot Message Bubble
+   =============================== */
+
+@keyframes chat-msg-in {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.chat-msg-in {
+  animation: chat-msg-in 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform-origin: bottom left;
+}
+
+.chat-msg-in-user {
+  transform-origin: bottom right;
 }
 
 .reveal-delay-1 {

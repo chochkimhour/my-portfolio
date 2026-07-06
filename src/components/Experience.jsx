@@ -84,9 +84,14 @@ const Experience = () => {
                                     </MetaRow>
                                 </dl>
 
-                                <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
-                                    {exp.description}
-                                </p>
+                                <ul className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed space-y-1">
+                                    {exp.description.split('\n').filter(item => item.trim()).map((item, i) => (
+                                        <li key={i} className="flex items-start gap-2">
+                                            <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-500 shrink-0" />
+                                            {item.trim()}
+                                        </li>
+                                    ))}
+                                </ul>
                             </li>
                         ))}
                     </ul>
