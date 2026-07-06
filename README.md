@@ -181,15 +181,16 @@ The app is a single scrolling landing page. Section links use simple anchors:
 https://<github-username>.github.io/my-portfolio/#projects
 ```
 
-## Continuous Integration
+## Continuous Integration & Deployment
 
-This repository includes a GitHub Actions CI workflow at `.github/workflows/ci.yml`.
+This repository includes a GitHub Actions CI/CD workflow at `.github/workflows/ci.yml`.
 
-The workflow runs on pushes and pull requests targeting `main` or `master` and performs the following checks:
+The workflow runs on pushes and pull requests targeting `main` or `master` and performs the following:
 
 - Installs dependencies with `npm ci`
 - Runs ESLint with `npm run lint`
 - Builds the production application with `npm run build`
+- Deploys the `dist` folder to the `gh-pages` branch using `peaceiris/actions-gh-pages`
 
 ## License
 
