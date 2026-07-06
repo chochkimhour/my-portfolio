@@ -7,6 +7,7 @@ export default defineConfig({
   base: './',
   plugins: [react(), tailwindcss()],
   envPrefix: [
+    'VITE_',
     'USER_',
     'GITHUB_',
     'LINKEDIN_',
