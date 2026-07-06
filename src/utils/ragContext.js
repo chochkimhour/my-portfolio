@@ -31,17 +31,18 @@ Projects:
 
 Experience:
 1. Backend Developer at Ecoinsoft Solutions Co., Ltd (2025-Present)
-   - Developed backend features for School Management System (SMS) and Examination Management System (EMS)
-   - Designed, developed RESTful APIs with CRUD operations
-   - Designed ER diagrams and database schemas with MySQL and Redis
-   - Maintained and refactored code, fixed bugs, tested API endpoints
-   - Built and deployed backend services across test, staging, production environments
+   - Developed and maintained backend features for School Management System (SMS) and Examination Management System (EMS) projects
+   - Designed, developed, and maintained RESTful APIs, implementing CRUD operations and business logic based on project requirements
+   - Designed ER diagrams and database schemas, worked with MySQL and Redis, and optimized application performance
+   - Maintained and refactored existing code, fixed bugs, tested API endpoints, and wrote technical documentation to ensure software quality
+   - Built and deployed backend services across test, staging, and production environments while supporting system maintenance and enhancements
+   - Collaborated with the development team, researched new technologies, and assisted in training new team members
 
 2. Backend Developer Intern at Ecoinsoft Solutions Co., Ltd (2024-2025)
-   - Mastered Java and OOP principles
-   - Developed RESTful APIs using Grails framework
-   - Implemented CRUD operations and business logic
-   - Followed clean coding practices
+   - Learned and applied Java and Object-Oriented Programming (OOP) principles in backend development
+   - Developed and maintained RESTful APIs using the Grails framework
+   - Implemented CRUD operations and business logic based on project requirements
+   - Followed clean coding practices and contributed to building reliable and maintainable backend applications
 
 3. Frontend Developer Intern at Soul Advisor (2024)
    - Built responsive web pages using React.js and Bootstrap

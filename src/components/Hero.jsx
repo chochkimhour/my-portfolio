@@ -38,13 +38,11 @@ const Hero = () => {
     return (
         <section id="home" className="scroll-mt-24">
             <div className="mx-auto max-w-2xl px-6 pt-32 pb-20 md:pt-40">
-                <div className="profile-image group relative mb-8 mx-auto h-40 w-40 rounded-2xl ring-2 ring-neutral-900/10 ring-offset-4 ring-offset-white dark:ring-white/15 dark:ring-offset-neutral-950 md:h-52 md:w-52">
-                    <span className="profile-image__ring" aria-hidden="true"></span>
-                    <span className="profile-image__shine" aria-hidden="true"></span>
+                <div className="profile-image relative mb-8 mx-auto h-40 w-40 rounded-2xl ring-2 ring-neutral-900/10 ring-offset-4 ring-offset-white dark:ring-white/15 dark:ring-offset-neutral-950 md:h-52 md:w-52">
                     <img
                         src={meImg}
                         alt={name}
-                        className="relative z-10 h-full w-full rounded-2xl object-cover border-4 border-white dark:border-neutral-950 shadow-lg shadow-neutral-900/10 dark:shadow-black/30 transition duration-500 ease-out group-hover:scale-105 group-hover:-rotate-2 group-hover:shadow-2xl group-hover:shadow-neutral-900/20 dark:group-hover:shadow-black/50"
+                        className="relative z-10 h-full w-full rounded-2xl object-cover border-4 border-white dark:border-neutral-950 shadow-lg shadow-neutral-900/10 dark:shadow-black/30"
                     />
                 </div>
 
