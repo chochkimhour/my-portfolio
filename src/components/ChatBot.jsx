@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { getRagContext } from '../utils/ragContext';
 
 const TypingIndicator = () => (
@@ -10,24 +11,50 @@ const TypingIndicator = () => (
     </div>
 );
 
-const TypewriterText = ({ text, onComplete }) => {
-    const [displayedText, setDisplayedText] = useState('');
-    const [currentIndex, setCurrentIndex] = useState(0);
-
-    useEffect(() => {
-        if (currentIndex < text.length) {
-            const timeout = setTimeout(() => {
-                setDisplayedText(text.substring(0, currentIndex + 1));
-                setCurrentIndex(prev => prev + 1);
-            }, 15);
-            return () => clearTimeout(timeout);
-        } else {
-            onComplete?.();
+const markdownComponents = {
+    p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+    strong: ({ children }) => <strong className="font-semibold text-gray-900 dark:text-gray-100">{children}</strong>,
+    em: ({ children }) => <em className="italic text-gray-700 dark:text-gray-300">{children}</em>,
+    ul: ({ children }) => <ul className="my-2 ml-4 list-disc space-y-1">{children}</ul>,
+    ol: ({ children }) => <ol className="my-2 ml-4 list-decimal space-y-1">{children}</ol>,
+    li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+    a: ({ href, children }) => (
+        <a href={href} target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:text-orange-600 underline underline-offset-2">
+            {children}
+        </a>
+    ),
+    code: ({ className, children }) => {
+        const isBlock = Boolean(className);
+        if (isBlock) {
+            return (
+                <code className="block my-2 p-2.5 rounded-lg bg-gray-100 dark:bg-neutral-900 text-xs font-mono overflow-x-auto whitespace-pre">
+                    {children}
+                </code>
+            );
         }
-    }, [currentIndex, text, onComplete]);
-
-    return <span>{displayedText}</span>;
+        return (
+            <code className="px-1 py-0.5 rounded bg-gray-100 dark:bg-neutral-900 text-xs font-mono">
+                {children}
+            </code>
+        );
+    },
+    pre: ({ children }) => <pre className="my-2 overflow-x-auto">{children}</pre>,
+    h1: ({ children }) => <h1 className="text-base font-bold mb-1.5 mt-1">{children}</h1>,
+    h2: ({ children }) => <h2 className="text-sm font-bold mb-1.5 mt-1">{children}</h2>,
+    h3: ({ children }) => <h3 className="text-sm font-semibold mb-1 mt-1">{children}</h3>,
+    blockquote: ({ children }) => (
+        <blockquote className="border-l-2 border-orange-400 pl-3 my-2 text-gray-600 dark:text-gray-400 italic">
+            {children}
+        </blockquote>
+    ),
+    hr: () => <hr className="my-2 border-gray-200 dark:border-neutral-700" />,
 };
+
+const MarkdownMessage = ({ content }) => (
+    <div className="chat-markdown break-words">
+        <ReactMarkdown components={markdownComponents}>{content}</ReactMarkdown>
+    </div>
+);
 
 const ChatBot = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -39,9 +66,43 @@ const ChatBot = () => {
     const [typingMessage, setTypingMessage] = useState(null);
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
+    const typingTimerRef = useRef(null);
 
-    const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
+    const OPENROUTER_API_KEY = (import.meta.env.VITE_OPENROUTER_API_KEY || '').trim();
+    const hasApiKey =
+        Boolean(OPENROUTER_API_KEY) &&
+        !OPENROUTER_API_KEY.includes('your_openrouter_api_key') &&
+        OPENROUTER_API_KEY !== 'undefined';
     const ragContext = getRagContext();
+
+    const clearTypingTimer = () => {
+        if (typingTimerRef.current) {
+            clearInterval(typingTimerRef.current);
+            typingTimerRef.current = null;
+        }
+    };
+
+    const startTypingEffect = (content) => {
+        clearTypingTimer();
+        setTypingMessage('');
+        setIsLoading(false);
+
+        let index = 0;
+        // Longer replies type a few chars at a time so it stays snappy
+        const charsPerTick = content.length > 500 ? 5 : content.length > 200 ? 3 : 1;
+        const speed = 16;
+
+        typingTimerRef.current = setInterval(() => {
+            index = Math.min(index + charsPerTick, content.length);
+            setTypingMessage(content.slice(0, index));
+
+            if (index >= content.length) {
+                clearTypingTimer();
+                setTypingMessage(null);
+                setMessages((prev) => [...prev, { role: 'assistant', content }]);
+            }
+        }, speed);
+    };
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -57,14 +118,25 @@ const ChatBot = () => {
         }
     }, [isOpen]);
 
+    useEffect(() => () => clearTypingTimer(), []);
+
     const sendMessage = async (e) => {
         e.preventDefault();
-        if (!input.trim() || isLoading) return;
+        if (!input.trim() || isLoading || typingMessage !== null) return;
 
         const userMessage = { role: 'user', content: input };
         setMessages(prev => [...prev, userMessage]);
         setInput('');
         setIsLoading(true);
+
+        if (!hasApiKey) {
+            setMessages(prev => [...prev, {
+                role: 'assistant',
+                content: 'Chat is not configured. For local dev, set `VITE_OPENROUTER_API_KEY` in your private `.env`. For GitHub Pages, add the same name as a repository Actions secret, then redeploy.'
+            }]);
+            setIsLoading(false);
+            return;
+        }
 
         try {
             const conversationHistory = messages
@@ -78,7 +150,7 @@ const ChatBot = () => {
 
                     When the user asks something about Choch Kimhour (his skills, projects, experience, background, education, contact info, etc.), use the context below to answer accurately. If the question is about Choch but the answer is not in the context, say you don't have that specific info and suggest they contact him directly.
 
-                    For all other questions unrelated to Choch, answer freely using your general knowledge. Be concise, clear, and friendly. Use markdown formatting (code blocks, lists, bold) when it helps readability.
+                    For all other questions unrelated to Choch, answer freely using your general knowledge. Be concise, clear, and friendly. Use clean markdown when helpful (bold, bullet lists, short sections). Prefer simple structure over heavy formatting.
 
                     ---
                     Context about Choch Kimhour:
@@ -89,14 +161,16 @@ const ChatBot = () => {
                 { role: 'user', content: input }
             ];
 
-            const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${GROQ_API_KEY}`
+                    'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+                    'HTTP-Referer': window.location.origin,
+                    'X-Title': 'Choch Kimhour Portfolio'
                 },
                 body: JSON.stringify({
-                    model: 'llama-3.3-70b-versatile',
+                    model: 'openai/gpt-oss-20b:free',
                     messages: apiMessages,
                     temperature: 0.7,
                     max_tokens: 1024
@@ -111,26 +185,15 @@ const ChatBot = () => {
             }
 
             if (data.choices && data.choices[0] && data.choices[0].message) {
-                const content = data.choices[0].message.content;
-                setTypingMessage(content);
-                setIsLoading(false);
-
-                // Simulate typing effect
-                let index = 0;
-                const speed = 30;
-                const timer = setInterval(() => {
-                    index++;
-                    if (index >= content.length) {
-                        clearInterval(timer);
-                        setTypingMessage(null);
-                        setMessages(prev => [...prev, { role: 'assistant', content }]);
-                    }
-                }, speed);
+                const content = data.choices[0].message.content ?? '';
+                startTypingEffect(content);
             } else {
                 throw new Error('Unexpected API response structure');
             }
         } catch (error) {
             console.error('Chat error:', error);
+            clearTypingTimer();
+            setTypingMessage(null);
             setMessages(prev => [...prev, {
                 role: 'assistant',
                 content: `Error: ${error.message}. Please check your internet connection or try again later.`
@@ -232,7 +295,7 @@ const ChatBot = () => {
                         </div>
                         <div>
                             <h3 className={`${theme.headerText} font-semibold`}>AI Assistant</h3>
-                            <p className={`${theme.headerSubtext} text-xs`}>Powered by Groq</p>
+                            <p className={`${theme.headerSubtext} text-xs`}>Powered by OpenRouter</p>
                         </div>
                     </div>
                 </div>
@@ -244,18 +307,22 @@ const ChatBot = () => {
                             key={index}
                             className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                         >
-                            <div className={`max-w-[80%] px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap break-words chat-msg-in ${
+                            <div className={`max-w-[80%] px-4 py-2.5 text-sm leading-relaxed break-words chat-msg-in ${
                                 msg.role === 'user'
-                                    ? `${theme.userMsgBg} ${theme.userMsgText} rounded-2xl rounded-br-md shadow-sm chat-msg-in-user`
+                                    ? `${theme.userMsgBg} ${theme.userMsgText} rounded-2xl rounded-br-md shadow-sm chat-msg-in-user whitespace-pre-wrap`
                                     : `${theme.botMsgBg} ${theme.botMsgText} rounded-2xl rounded-bl-md ${theme.botMsgBorder}`
                             }`}>
-                                {msg.content}
+                                {msg.role === 'assistant' ? (
+                                    <MarkdownMessage content={msg.content} />
+                                ) : (
+                                    msg.content
+                                )}
                             </div>
                         </div>
                     ))}
 
-                    {/* Typing animation */}
-                    {typingMessage && (
+                    {/* Live typing (plain text while streaming in; markdown applied when finished) */}
+                    {typingMessage !== null && (
                         <div className="flex justify-start">
                             <div className={`max-w-[80%] w-fit ${theme.botMsgBg} rounded-2xl rounded-bl-md ${theme.botMsgBorder} chat-msg-in`}>
                                 <div className="px-4 py-2.5 text-sm leading-relaxed text-gray-800 dark:text-gray-200 whitespace-pre-wrap break-words">
@@ -266,7 +333,7 @@ const ChatBot = () => {
                         </div>
                     )}
 
-                    {isLoading && !typingMessage && (
+                    {isLoading && typingMessage === null && (
                         <div className="flex justify-start">
                             <div className={`max-w-[80%] ${theme.botMsgBg} rounded-2xl rounded-bl-md ${theme.botMsgBorder} chat-msg-in`}>
                                 <TypingIndicator />
@@ -294,12 +361,12 @@ const ChatBot = () => {
                                 rows={1}
                                 className={`block w-full h-11 px-4 py-3 bg-gray-100 dark:bg-neutral-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 resize-none leading-5 border-0 align-middle box-border ${theme.inputText} ${theme.inputPlaceholder}`}
                                 style={{ maxHeight: '100px' }}
-                                disabled={isLoading}
+                                disabled={isLoading || typingMessage !== null}
                             />
                         </div>
                         <button
                             type="submit"
-                            disabled={isLoading || !input.trim()}
+                            disabled={isLoading || typingMessage !== null || !input.trim()}
                             className={`flex-shrink-0 w-11 h-11 rounded-xl disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center ${theme.sendButtonBg} ${theme.sendButtonText}`}
                             aria-label="Send message"
                         >

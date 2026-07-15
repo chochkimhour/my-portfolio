@@ -1,4 +1,17 @@
-import { PERSONAL_INFO } from "../constants";
+import {
+    PERSONAL_INFO,
+    SKILLS,
+    PROJECTS,
+    EXPERIENCE,
+    SERVICES,
+} from "../constants";
+
+const formatPeriod = (startDate, endDate) => {
+    const startYear = startDate ? new Date(startDate).getFullYear() : "";
+    if (!endDate) return startYear ? `${startYear}-Present` : "Present";
+    const endYear = new Date(endDate).getFullYear();
+    return startYear === endYear ? String(startYear) : `${startYear}-${endYear}`;
+};
 
 export const getRagContext = () => {
     const {
@@ -8,7 +21,66 @@ export const getRagContext = () => {
         email,
         tagline,
         brandDescription,
+        aboutP1,
+        aboutP2,
+        expertise,
+        stats,
+        githubUrl,
+        linkedinUrl,
+        npmPackageUrl,
+        telegramUsername,
+        telegramUrl,
     } = PERSONAL_INFO;
+
+    const statsLine = stats
+        .map((s) => `${s.label}: ${s.value}`)
+        .join(" | ");
+
+    const skillsBlock = [
+        `- Languages: ${SKILLS.languages.join(", ")}`,
+        `- Frameworks: ${SKILLS.frameworks.join(", ")}`,
+        `- Databases: ${SKILLS.databases.join(", ")}`,
+        `- DevOps: ${SKILLS.devops.join(", ")}`,
+    ].join("\n");
+
+    const projectsBlock = PROJECTS.map((project, index) => {
+        const links = [
+            project.liveUrl && `Live/npm: ${project.liveUrl}`,
+            project.githubUrl && `GitHub: ${project.githubUrl}`,
+        ]
+            .filter(Boolean)
+            .join(" | ");
+
+        return [
+            `${index + 1}. ${project.title} (${project.type})`,
+            `   ${project.description}`,
+            `   Tech: ${project.tech.join(", ")}`,
+            links ? `   ${links}` : null,
+        ]
+            .filter(Boolean)
+            .join("\n");
+    }).join("\n");
+
+    const experienceBlock = EXPERIENCE.map((exp, index) => {
+        const period = formatPeriod(exp.startDate, exp.endDate);
+        const bullets = exp.description
+            .split("\n")
+            .map((line) => line.trim())
+            .filter(Boolean)
+            .map((line) => `   - ${line}`)
+            .join("\n");
+
+        return [
+            `${index + 1}. ${exp.role} at ${exp.company} (${period})`,
+            bullets,
+        ]
+            .filter(Boolean)
+            .join("\n");
+    }).join("\n\n");
+
+    const servicesBlock = SERVICES.map(
+        (service) => `- ${service.title}: ${service.description}`
+    ).join("\n");
 
     return `
 Name: ${name}
@@ -17,49 +89,28 @@ Location: ${location}
 Email: ${email}
 Tagline: ${tagline}
 About: ${brandDescription}
+${aboutP1 ? `Bio: ${aboutP1}` : ""}
+${aboutP2 ? `Bio (continued): ${aboutP2}` : ""}
+${expertise?.length ? `Expertise: ${expertise.join(", ")}` : ""}
+${statsLine ? `Stats: ${statsLine}` : ""}
 
 Skills:
-- Languages: HTML, CSS, JavaScript, Java, Groovy, Python
-- Frameworks: Node.js, Express, NestJS, Spring Boot, React JS, Tailwind CSS, Grails
-- Databases: MySQL, PostgreSQL, Redis
-- DevOps: Git, GitHub, Docker, CI/CD, Cloud Deployment
+${skillsBlock}
 
 Projects:
-1. My Portfolio - A responsive personal portfolio built with React, Vite, Tailwind CSS, deployed on GitHub Pages.
-2. khmer-chhankitek-calendar - An npm package for Khmer Chhankitek calendar utilities.
-3. init-backend-project - A backend starter utility published on npm for Node.js projects.
+${projectsBlock}
 
 Experience:
-1. Backend Developer at Ecoinsoft Solutions Co., Ltd (2025-Present)
-   - Developed and maintained backend features for School Management System (SMS) and Examination Management System (EMS) projects
-   - Designed, developed, and maintained RESTful APIs, implementing CRUD operations and business logic based on project requirements
-   - Designed ER diagrams and database schemas, worked with MySQL and Redis, and optimized application performance
-   - Maintained and refactored existing code, fixed bugs, tested API endpoints, and wrote technical documentation to ensure software quality
-   - Built and deployed backend services across test, staging, and production environments while supporting system maintenance and enhancements
-   - Collaborated with the development team, researched new technologies, and assisted in training new team members
-
-2. Backend Developer Intern at Ecoinsoft Solutions Co., Ltd (2024-2025)
-   - Learned and applied Java and Object-Oriented Programming (OOP) principles in backend development
-   - Developed and maintained RESTful APIs using the Grails framework
-   - Implemented CRUD operations and business logic based on project requirements
-   - Followed clean coding practices and contributed to building reliable and maintainable backend applications
-
-3. Frontend Developer Intern at Soul Advisor (2024)
-   - Built responsive web pages using React.js and Bootstrap
-   - Fixed UI issues and improved page layouts
-   - Participated in Agile meetings and collaborated with team
-   - Assisted in developing new frontend features
-   - Tested frontend features across different browsers and devices
+${experienceBlock}
 
 Services:
-- API Design & Development
-- Database Architecture
-- System Infrastructure
+${servicesBlock}
 
 Contact:
-- Email: chochkimhour2303@gmail.com
-- GitHub: https://github.com/chochkimhour
-- LinkedIn: https://linkedin.com/in/choch-kimhour
-- npm: https://www.npmjs.com/~chochkimhour
-`.trim();
+- Email: ${email}
+- Telegram: ${telegramUsername} (${telegramUrl})
+- GitHub: ${githubUrl}
+- LinkedIn: ${linkedinUrl}
+- npm: ${npmPackageUrl}
+`.replace(/\n{3,}/g, "\n\n").trim();
 };

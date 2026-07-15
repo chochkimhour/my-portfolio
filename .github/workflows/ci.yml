@@ -48,7 +48,9 @@ jobs:
       - name: Build application
         run: npm run build
         env:
-          VITE_GROQ_API_KEY: ${{ secrets.VITE_GROQ_API_KEY }}
+          # Injected only at build time from GitHub Actions secrets (never commit real keys).
+          # Create secret: Settings → Secrets and variables → Actions → VITE_OPENROUTER_API_KEY
+          VITE_OPENROUTER_API_KEY: ${{ secrets.VITE_OPENROUTER_API_KEY }}
 
       - name: Configure GitHub Pages
         if: github.event_name == 'push'

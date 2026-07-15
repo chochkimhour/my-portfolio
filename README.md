@@ -68,6 +68,17 @@ Use `.env.example` as the complete list of supported variables. The main groups 
 
 Keep `.env` local for development. For GitHub Pages deployment, configure the same public values as GitHub Actions repository variables so Vite can compile those values into the static site without committing env files.
 
+### Chatbot API key (OpenRouter)
+
+| Where | How |
+|-------|-----|
+| Local | Put `VITE_OPENROUTER_API_KEY=...` in private `.env` (gitignored) |
+| Deploy (CI) | Repo **Settings → Secrets and variables → Actions** → secret name **`VITE_OPENROUTER_API_KEY`** |
+
+The CI workflow injects that secret only during `npm run build`. Never commit a real key in `.env.production` or the repo.
+
+**Note:** Any `VITE_*` value is compiled into the public frontend bundle. GitHub secrets keep the key out of git; they do not hide it from the browser after deploy. For stronger protection later, use a server-side proxy.
+
 ## Local Development
 
 Install dependencies:
