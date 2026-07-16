@@ -324,59 +324,78 @@ const ChatBot = () => {
     };
 
     return (
-        <div className="fixed bottom-6 right-6 z-50">
+        <div
+            className="fixed z-50 bottom-4 right-4 sm:bottom-6 sm:right-6"
+            style={{
+                // Keep clear of iPhone home indicator / notched edges
+                marginBottom: 'env(safe-area-inset-bottom, 0px)',
+                marginRight: 'env(safe-area-inset-right, 0px)',
+            }}
+        >
             <button
+                type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className={`w-14 h-14 rounded-2xl shadow-lg flex items-center justify-center transition-[transform,box-shadow,background-color] duration-300 ease-out ${
+                className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl shadow-lg flex items-center justify-center touch-manipulation transition-[transform,box-shadow,background-color] duration-300 ease-out ${
                     isOpen
                         ? `${theme.closeButtonBg} rotate-90`
-                        : `${theme.buttonBg} hover:shadow-xl hover:scale-105`
+                        : `${theme.buttonBg} hover:shadow-xl sm:hover:scale-105`
                 } ${theme.buttonText}`}
                 aria-label={isOpen ? 'Close Neo' : 'Open Neo'}
+                aria-expanded={isOpen}
             >
                 {isOpen ? (
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 ) : (
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-4l-4 4z" />
                     </svg>
                 )}
             </button>
 
             <div
-                className={`absolute bottom-20 right-0 w-80 md:w-96 rounded-2xl shadow-2xl overflow-hidden transition-[opacity,transform] duration-300 ease-out ${
+                className={`absolute bottom-[3.5rem] sm:bottom-20 right-0 flex flex-col rounded-2xl shadow-2xl overflow-hidden transition-[opacity,transform] duration-300 ease-out ${
                     isOpen
                         ? 'opacity-100 translate-y-0 scale-100 pointer-events-auto'
                         : 'opacity-0 translate-y-2 scale-95 pointer-events-none'
-                } ${theme.windowBg} ${theme.windowBorder} flex flex-col`}
+                } ${theme.windowBg} ${theme.windowBorder}`}
                 style={{
-                    height: '550px',
+                    // Fit any phone width (320px+) without clipping; cap on larger screens
+                    width: 'min(24rem, calc(100vw - 2rem))',
+                    // Never taller than the visible viewport (short phones / landscape)
+                    height: 'min(34.375rem, calc(100dvh - 5.5rem - env(safe-area-inset-bottom, 0px)))',
+                    maxHeight: 'calc(100dvh - 5.5rem - env(safe-area-inset-bottom, 0px))',
                     transformOrigin: 'bottom right',
                 }}
+                role="dialog"
+                aria-label="Neo chat"
+                aria-hidden={!isOpen}
             >
-                <div className={`${theme.headerBg} p-4 flex-shrink-0`}>
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-orange-100 dark:bg-orange-500/20 flex items-center justify-center shrink-0">
-                            <svg className="w-6 h-6 text-orange-400 dark:text-orange-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className={`${theme.headerBg} px-3 py-3 sm:p-4 flex-shrink-0`}>
+                    <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-orange-100 dark:bg-orange-500/20 flex items-center justify-center shrink-0">
+                            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-orange-400 dark:text-orange-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-4l-4 4z" />
                             </svg>
                         </div>
                         <div className="min-w-0">
-                            <h3 className={`${theme.headerText} font-semibold`}>Neo</h3>
-                            <p className={`${theme.headerSubtext} text-xs`}>Powered by OpenRouter</p>
+                            <h3 className={`${theme.headerText} font-semibold text-sm sm:text-base`}>Neo</h3>
+                            <p className={`${theme.headerSubtext} text-[11px] sm:text-xs truncate`}>Powered by OpenRouter</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                <div
+                    className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-3 sm:p-4 space-y-3 sm:space-y-4"
+                    style={{ WebkitOverflowScrolling: 'touch' }}
+                >
                     {messages.map((msg, index) => (
                         <div
                             key={index}
                             className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                         >
-                            <div className={`max-w-[80%] px-4 py-2.5 text-sm leading-relaxed break-words chat-msg-in ${
+                            <div className={`max-w-[85%] sm:max-w-[80%] px-3 py-2 sm:px-4 sm:py-2.5 text-[13px] sm:text-sm leading-relaxed break-words [overflow-wrap:anywhere] chat-msg-in ${
                                 msg.role === 'user'
                                     ? `${theme.userMsgBg} ${theme.userMsgText} rounded-2xl rounded-br-md shadow-sm chat-msg-in-user whitespace-pre-wrap`
                                     : `${theme.botMsgBg} ${theme.botMsgText} rounded-2xl rounded-bl-md ${theme.botMsgBorder}`
@@ -392,7 +411,7 @@ const ChatBot = () => {
 
                     {isLoading && (
                         <div className="flex justify-start">
-                            <div className={`max-w-[80%] ${theme.botMsgBg} rounded-2xl rounded-bl-md ${theme.botMsgBorder} chat-msg-in`}>
+                            <div className={`max-w-[85%] sm:max-w-[80%] ${theme.botMsgBg} rounded-2xl rounded-bl-md ${theme.botMsgBorder} chat-msg-in`}>
                                 <TypingIndicator label="Thinking..." />
                             </div>
                         </div>
@@ -400,29 +419,36 @@ const ChatBot = () => {
                     <div ref={messagesEndRef} />
                 </div>
 
-                <form onSubmit={sendMessage} className={`p-4 border-t flex-shrink-0 ${theme.inputBorder} ${theme.inputBg}`}>
-                    <div className="flex items-center gap-2">
-                        <div className="flex-1 relative flex">
+                <form
+                    onSubmit={sendMessage}
+                    className={`p-3 sm:p-4 border-t flex-shrink-0 ${theme.inputBorder} ${theme.inputBg}`}
+                >
+                    <div className="flex items-end gap-2">
+                        <div className="flex-1 min-w-0 relative flex">
                             <textarea
                                 ref={inputRef}
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyDown={(e) => {
-                                    if (e.key === 'Enter' && !e.shiftKey) {
+                                    // Desktop: Enter sends. Mobile soft keyboards often use Enter for newline — leave as-is.
+                                    if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
+                                        // Avoid accidental send on some mobile keyboards that fire Enter
+                                        if (window.matchMedia('(pointer: coarse)').matches) return;
                                         e.preventDefault();
                                         sendMessage(e);
                                     }
                                 }}
                                 placeholder="Ask anything"
                                 rows={1}
-                                className={`block w-full min-h-11 max-h-[100px] px-4 py-2.5 rounded-xl text-sm resize-none leading-5 align-middle box-border overflow-y-hidden bg-white dark:bg-neutral-950 border-2 border-gray-300 dark:border-neutral-500 shadow-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 hover:border-gray-400 dark:hover:border-neutral-400 focus:outline-none focus:border-orange-400 dark:focus:border-orange-400 focus:ring-2 focus:ring-orange-400/30 transition-[border-color,box-shadow] duration-150 disabled:opacity-60 ${theme.inputText}`}
+                                enterKeyHint="send"
+                                className={`block w-full min-h-11 max-h-[100px] px-3 sm:px-4 py-2.5 rounded-xl text-base sm:text-sm resize-none leading-5 align-middle box-border overflow-y-hidden bg-white dark:bg-neutral-950 border-2 border-gray-300 dark:border-neutral-500 shadow-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 hover:border-gray-400 dark:hover:border-neutral-400 focus:outline-none focus:border-orange-400 dark:focus:border-orange-400 focus:ring-2 focus:ring-orange-400/30 transition-[border-color,box-shadow] duration-150 disabled:opacity-60 ${theme.inputText}`}
                                 disabled={isLoading}
                             />
                         </div>
                         <button
                             type="submit"
                             disabled={isLoading || !input.trim()}
-                            className={`flex-shrink-0 w-11 h-11 rounded-xl disabled:opacity-40 disabled:cursor-not-allowed transition-[box-shadow,background-color,opacity] duration-200 shadow-md hover:shadow-lg flex items-center justify-center ${theme.sendButtonBg} ${theme.sendButtonText}`}
+                            className={`flex-shrink-0 w-11 h-11 rounded-xl touch-manipulation disabled:opacity-40 disabled:cursor-not-allowed transition-[box-shadow,background-color,opacity] duration-200 shadow-md hover:shadow-lg flex items-center justify-center ${theme.sendButtonBg} ${theme.sendButtonText}`}
                             aria-label="Send message"
                         >
                             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
