@@ -4,9 +4,29 @@ const ScrollToTop = () => {
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
-        const toggle = () => setIsVisible(window.pageYOffset > 500);
-        window.addEventListener('scroll', toggle);
-        return () => window.removeEventListener('scroll', toggle);
+        let frameId = null;
+        let lastVisible = false;
+
+        const update = () => {
+            frameId = null;
+            const next = window.scrollY > 500;
+            if (next !== lastVisible) {
+                lastVisible = next;
+                setIsVisible(next);
+            }
+        };
+
+        const onScroll = () => {
+            if (frameId != null) return;
+            frameId = window.requestAnimationFrame(update);
+        };
+
+        update();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => {
+            if (frameId != null) window.cancelAnimationFrame(frameId);
+            window.removeEventListener('scroll', onScroll);
+        };
     }, []);
 
     const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -15,7 +35,7 @@ const ScrollToTop = () => {
         <button
             onClick={scrollToTop}
             aria-label="Scroll to top"
-            className={`fixed bottom-6 left-6 z-40 font-mono text-[11px] uppercase tracking-widest text-neutral-500 dark:text-neutral-400 transition-all duration-200 ${
+            className={`fixed bottom-6 left-6 z-40 font-mono text-[11px] uppercase tracking-widest text-neutral-500 dark:text-neutral-400 transition-[opacity,transform] duration-200 ${
                 isVisible ? 'opacity-100 hover:opacity-70' : 'opacity-0 pointer-events-none'
             } hover:scale-110 hover:-translate-y-1`}
         >

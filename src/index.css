@@ -9,13 +9,20 @@
 
 body {
   @apply bg-white text-neutral-900 antialiased font-mono;
+  /* Only animate page shell colors — avoid body * transitions (major jank source) */
   transition:
-    background-color 260ms ease,
-    color 260ms ease;
+    background-color 200ms ease,
+    color 200ms ease;
 }
 
 .dark body {
   @apply bg-neutral-950 text-neutral-100;
+}
+
+/* Below-fold sections: skip layout/paint until near viewport */
+main > section:not(#home) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 640px;
 }
 
 /* chanhdai.com-style background: centered column framed by vertical guide
@@ -33,6 +40,7 @@ body {
   max-width: 1024px;
   margin-inline: auto;
   border-inline: 1px solid rgba(23, 23, 23, 0.08);
+  transition: border-color 200ms ease;
 }
 
 .dark .site-bg__rails {
@@ -126,14 +134,6 @@ body::before {
 }
 .dark ::-webkit-scrollbar-thumb {
   background: #404040;
-}
-
-body *,
-body *::before,
-body *::after {
-  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow;
-  transition-duration: 260ms;
-  transition-timing-function: ease;
 }
 
 .theme-toggle {
@@ -231,19 +231,20 @@ body *::after {
   cursor: default;
 }
 
-/* subtle float on idle */
+/* subtle float on idle — transform-only keeps it cheap on the compositor */
 @keyframes profile-float {
   0%,
   100% {
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
   50% {
-    transform: translateY(-6px);
+    transform: translate3d(0, -6px, 0);
   }
 }
 
 .profile-image {
   animation: profile-float 4s ease-in-out infinite;
+  backface-visibility: hidden;
 }
 
 /* ===============================

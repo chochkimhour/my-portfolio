@@ -42,11 +42,15 @@ const Hero = () => {
                     <img
                         src={meImg}
                         alt={name}
+                        width={208}
+                        height={208}
+                        fetchPriority="high"
+                        decoding="async"
                         className="relative z-10 h-full w-full rounded-2xl object-cover border-4 border-white dark:border-neutral-950 shadow-lg shadow-neutral-900/10 dark:shadow-black/30"
                     />
                 </div>
 
-                <h1 className="text-4xl md:text-6xl font-extrabold text-neutral-900 dark:text-neutral-50 mb-4 tracking-tight leading-[1.05] text-center flex items-center justify-center gap-2 md:gap-3 flex-wrap">
+                <h1 className="text-3xl md:text-5xl font-extrabold text-neutral-900 dark:text-neutral-50 mb-4 tracking-tight leading-[1.05] text-center flex items-center justify-center gap-2 md:gap-3 flex-wrap">
                     <span>{name}</span>
                     <span
                         className="inline-flex shrink-0 text-sky-500"
@@ -55,7 +59,7 @@ const Hero = () => {
                         title="Verified"
                     >
                         <svg
-                            className="w-6 h-6 md:w-8 md:h-8"
+                            className="w-5 h-5 md:w-7 md:h-7"
                             viewBox="0 0 24 24"
                             fill="currentColor"
                             aria-hidden="true"

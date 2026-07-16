@@ -92,7 +92,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
     }, []);
 
     return (
-        <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 dark:bg-neutral-950/80 backdrop-blur border-b border-neutral-200 dark:border-neutral-800">
+        <nav className="fixed top-0 left-0 w-full z-50 bg-white/85 dark:bg-neutral-950/90 backdrop-blur-sm border-b border-neutral-200 dark:border-neutral-800 transition-[background-color,border-color] duration-200">
             <div className="mx-auto max-w-2xl px-6 h-16 flex items-center justify-between gap-4 md:justify-center">
                 <div className="hidden md:flex items-center gap-8">
                     {NAV_LINKS.map((link) => {

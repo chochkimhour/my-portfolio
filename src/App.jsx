@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import Navbar from "./layouts/Navbar";
 import Footer from "./layouts/Footer";
 import Hero from "./components/Hero";
@@ -7,16 +7,20 @@ import Services from "./components/Services";
 import Experience from "./components/Experience";
 import Projects from "./components/Projects";
 import Contact from "./components/Contact";
-import ApiPlayground from "./components/ApiPlayground";
-import ChatBot from "./components/ChatBot";
 import ScrollToTop from "./components/ScrollToTop";
 import { SEO_INFO } from "./constants";
+
+// Heavy / below-fold interactive widgets — split from the initial JS parse
+const ApiPlayground = lazy(() => import("./components/ApiPlayground"));
+const ChatBot = lazy(() => import("./components/ChatBot"));
 
 function App() {
   const hasMounted = useRef(false);
   const [darkMode, setDarkMode] = useState(() =>
-    window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false
+    window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false
   );
+  // Defer chatbot chunk until the browser is idle (or after a short fallback)
+  const [chatReady, setChatReady] = useState(false);
 
   useEffect(() => {
     let animationTimer;
@@ -57,6 +61,26 @@ function App() {
     setMeta('meta[property="og:description"]', SEO_INFO.ogDescription);
   }, []);
 
+  useEffect(() => {
+    let idleId;
+    let timeoutId;
+
+    const enableChat = () => setChatReady(true);
+
+    if (typeof window.requestIdleCallback === "function") {
+      idleId = window.requestIdleCallback(enableChat, { timeout: 2000 });
+    } else {
+      timeoutId = window.setTimeout(enableChat, 1200);
+    }
+
+    return () => {
+      if (idleId != null && typeof window.cancelIdleCallback === "function") {
+        window.cancelIdleCallback(idleId);
+      }
+      if (timeoutId != null) window.clearTimeout(timeoutId);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col text-neutral-900 dark:text-neutral-100">
       <div className="site-bg" aria-hidden="true">
@@ -66,7 +90,9 @@ function App() {
 
       <main className="flex-grow">
         <Hero />
-        <ApiPlayground />
+        <Suspense fallback={<div className="min-h-[28rem]" aria-hidden="true" />}>
+          <ApiPlayground />
+        </Suspense>
         <About />
         <Services />
         <Experience />
@@ -75,7 +101,11 @@ function App() {
       </main>
 
       <Footer />
-      <ChatBot />
+      {chatReady && (
+        <Suspense fallback={null}>
+          <ChatBot />
+        </Suspense>
+      )}
       <ScrollToTop />
     </div>
   );

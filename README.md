@@ -7,7 +7,7 @@
 ![Type](https://img.shields.io/badge/Type-ESM%20JavaScript-F7DF1E?logo=javascript&logoColor=000000)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 
-A production-ready personal portfolio website built with React, Vite, Tailwind CSS, and Docker. The application presents professional experience, services, featured projects, contact links, and a small interactive portfolio assistant.
+A production-ready personal portfolio website built with React, Vite, Tailwind CSS, and Docker. The application presents professional experience, services, featured projects, contact links, and Neo — an interactive portfolio chatbot with live web research.
 
 ## Overview
 
@@ -18,7 +18,7 @@ This project is designed as a fast, responsive, and maintainable portfolio appli
 - Responsive single-page portfolio experience
 - Professional sections for hero, about, services, experience, projects, and contact
 - Environment-driven personal information and social links
-- Interactive portfolio assistant component
+- Neo chatbot with live web research (OpenRouter)
 - Light and dark theme support
 - Vite development server with fast refresh
 - Docker and Docker Compose support for local development
@@ -68,7 +68,7 @@ Use `.env.example` as the complete list of supported variables. The main groups 
 
 Keep `.env` local for development. For GitHub Pages deployment, configure the same public values as GitHub Actions repository variables so Vite can compile those values into the static site without committing env files.
 
-### Chatbot API key (OpenRouter)
+### Neo chatbot API key (OpenRouter)
 
 | Where | How |
 |-------|-----|
