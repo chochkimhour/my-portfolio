@@ -2,8 +2,15 @@ import { useState, useRef, useEffect, useCallback, memo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { getRagContext } from '../utils/ragContext';
 
-const BASE_MODEL =
-    (import.meta.env.VITE_OPENROUTER_MODEL || 'openai/gpt-oss-20b:free').trim();
+const BASE_MODEL = (import.meta.env.VITE_AI_MODEL || 'auto').trim();
+const AI_BASE_URL = (import.meta.env.VITE_AI_BASE_URL || 'https://api.iamhc.cn/v1')
+    .trim()
+    .replace(/\/+$/, '');
+const AI_API_URL = `${AI_BASE_URL}/chat/completions`;
+
+// Keep payloads small — large history + long reasoning is what made Neo feel slow
+const MAX_HISTORY_MESSAGES = 12;
+const MAX_COMPLETION_TOKENS = 1024;
 
 const TypingIndicator = ({ label = 'Typing...' }) => (
     <div className="flex items-center gap-1.5 px-4 py-3">
@@ -93,8 +100,10 @@ const extractAssistantContent = (message) => {
     if (text) return text;
 
     // Fallback: some providers only fill reasoning-style fields
-    if (typeof message.reasoning === 'string' && message.reasoning.trim()) {
-        return message.reasoning.trim();
+    for (const key of ['reasoning', 'reasoning_content']) {
+        if (typeof message[key] === 'string' && message[key].trim()) {
+            return message[key].trim();
+        }
     }
 
     if (Array.isArray(message.reasoning_details)) {
@@ -131,29 +140,113 @@ const theme = {
     sendButtonText: 'text-white',
 };
 
-const buildSystemPrompt = (ragContext) => `You are Neo, a helpful, friendly AI on Choch Kimhour's portfolio website.
+const buildSystemPrompt = (ragContext) => `You are Neo on Choch Kimhour's portfolio. Answer directly and concisely in the first sentence. No search talk, no source lists, no chain-of-thought. Light markdown only when useful.
 
-CORE RULE — JUST ANSWER:
-- Give a direct, useful answer in the first sentence. Never stall.
-- NEVER say you need to search, browse, look it up, or describe any search process.
-- NEVER ask permission to search. Do NOT list sources, citations, or a "Sources" section.
-- Answer as a normal assistant: short, clear, friendly.
+About Choch: use the portfolio context below; if missing, say you don't have that detail. For general questions, answer helpfully.
 
-LIVE WEB (important):
-- Fresh web search results are attached to this request automatically. Treat them as your primary source for facts (who built what, releases, news, companies, products, versions, current events).
-- When web results are present, prefer them over your training memory — training data is often wrong or outdated.
-- Do not invent company names, product ownership, or release details if web results say otherwise.
-- If web results are missing or weak, give your best careful answer and say you may be unsure — still answer, never refuse.
+Portfolio context:
+${ragContext}`;
 
-About Choch Kimhour only:
-- For questions about Choch, use the portfolio context below (not web). If it isn't there, say you don't have that detail.
+/**
+ * Stream OpenAI-compatible SSE chat completions.
+ * Prefer `delta.content` (final answer). Reasoning deltas are ignored for display
+ * so the UI is not stuck printing long hidden thinking.
+ */
+const streamChatCompletion = async ({ apiKey, body, onDelta, signal }) => {
+    const response = await fetch(AI_API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${apiKey}`,
+            Accept: 'text/event-stream',
+        },
+        body: JSON.stringify({ ...body, stream: true }),
+        signal,
+    });
 
-Style: concise. Light markdown when useful. No fluff.
+    if (!response.ok) {
+        let message = `HTTP ${response.status}`;
+        try {
+            const err = await response.json();
+            message = err.error?.message || message;
+        } catch {
+            // ignore parse errors
+        }
+        throw new Error(message);
+    }
 
----
-Context about Choch Kimhour:
-${ragContext}
----`;
+    // Some proxies still return JSON even when stream:true
+    const contentType = response.headers.get('content-type') || '';
+    if (contentType.includes('application/json') && !contentType.includes('event-stream')) {
+        const data = await response.json();
+        const text = extractAssistantContent(data.choices?.[0]?.message);
+        if (text) onDelta(text);
+        return text;
+    }
+
+    if (!response.body) {
+        throw new Error('Streaming is not supported in this browser.');
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let content = '';
+    let reasoningFallback = '';
+
+    const handlePayload = (payload) => {
+        if (!payload || payload === '[DONE]') return;
+        let parsed;
+        try {
+            parsed = JSON.parse(payload);
+        } catch {
+            return;
+        }
+
+        const delta = parsed.choices?.[0]?.delta;
+        if (!delta) return;
+
+        if (typeof delta.content === 'string' && delta.content) {
+            content += delta.content;
+            onDelta(content);
+            return;
+        }
+
+        // Collect reasoning only as emergency fallback if content never arrives
+        for (const key of ['reasoning', 'reasoning_content']) {
+            if (typeof delta[key] === 'string' && delta[key]) {
+                reasoningFallback += delta[key];
+            }
+        }
+    };
+
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const parts = buffer.split('\n');
+        buffer = parts.pop() ?? '';
+
+        for (const rawLine of parts) {
+            const line = rawLine.trim();
+            if (!line || line.startsWith(':')) continue;
+            if (line.startsWith('data:')) {
+                handlePayload(line.slice(5).trim());
+            }
+        }
+    }
+
+    if (buffer.trim().startsWith('data:')) {
+        handlePayload(buffer.trim().slice(5).trim());
+    }
+
+    const finalText = content.trim() || reasoningFallback.trim();
+    if (finalText && finalText !== content) {
+        onDelta(finalText);
+    }
+    return finalText;
+};
 
 const ChatBot = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -166,30 +259,41 @@ const ChatBot = () => {
     ]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isStreaming, setIsStreaming] = useState(false);
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
     const ragContextRef = useRef(null);
+    const abortRef = useRef(null);
+    const scrollRafRef = useRef(0);
 
     if (ragContextRef.current === null) {
         ragContextRef.current = getRagContext();
     }
 
-    const OPENROUTER_API_KEY = (import.meta.env.VITE_OPENROUTER_API_KEY || '').trim();
+    const AI_API_KEY = (import.meta.env.VITE_AI_API_KEY || '').trim();
     const hasApiKey =
-        Boolean(OPENROUTER_API_KEY) &&
-        !OPENROUTER_API_KEY.includes('your_openrouter_api_key') &&
-        OPENROUTER_API_KEY !== 'undefined';
+        Boolean(AI_API_KEY) &&
+        !AI_API_KEY.includes('your_ai_api_key') &&
+        AI_API_KEY !== 'undefined';
 
-    const scrollToBottom = useCallback(() => {
+    const scrollToBottom = useCallback((smooth = true) => {
         messagesEndRef.current?.scrollIntoView({
-            behavior: 'smooth',
+            behavior: smooth ? 'smooth' : 'auto',
             block: 'end',
         });
     }, []);
 
     useEffect(() => {
-        scrollToBottom();
-    }, [messages, isLoading, scrollToBottom]);
+        // During streaming, use instant scroll to avoid jank
+        scrollToBottom(!isStreaming);
+    }, [messages, isLoading, isStreaming, scrollToBottom]);
+
+    useEffect(() => {
+        return () => {
+            abortRef.current?.abort();
+            if (scrollRafRef.current) cancelAnimationFrame(scrollRafRef.current);
+        };
+    }, []);
 
     useEffect(() => {
         if (isOpen) {
@@ -220,23 +324,34 @@ const ChatBot = () => {
         setMessages((prev) => [...prev, userMessage]);
         setInput('');
         setIsLoading(true);
+        setIsStreaming(false);
 
         if (!hasApiKey) {
             setMessages((prev) => [...prev, {
                 role: 'assistant',
-                content: 'Chat is not configured. For local dev, set `VITE_OPENROUTER_API_KEY` in your private `.env`. For GitHub Pages, add the same name as a repository Actions secret, then redeploy.'
+                content: 'Chat is not configured. For local dev, set `VITE_AI_API_KEY` in your private `.env`. For GitHub Pages, add the same name as a repository Actions secret, then redeploy.'
             }]);
             setIsLoading(false);
             return;
         }
 
+        abortRef.current?.abort();
+        const controller = new AbortController();
+        abortRef.current = controller;
+
+        // Placeholder bubble so streaming text appears immediately
+        setMessages((prev) => [...prev, { role: 'assistant', content: '' }]);
+
         try {
+            // Skip the canned welcome line; keep only recent turns to cut prompt size
             const conversationHistory = messages
-                .filter((m) =>
+                .filter((m, index) =>
+                    index > 0 &&
                     (m.role === 'user' || m.role === 'assistant') &&
                     typeof m.content === 'string' &&
                     m.content.trim()
                 )
+                .slice(-MAX_HISTORY_MESSAGES)
                 .map((m) => ({ role: m.role, content: m.content }));
 
             const apiMessages = [
@@ -248,78 +363,76 @@ const ChatBot = () => {
                 { role: 'user', content: userText },
             ];
 
-            const headers = {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-                'HTTP-Referer': window.location.origin,
-                'X-Title': 'Choch Kimhour Portfolio',
+            let lastFlush = '';
+            let pending = '';
+            const flushStream = (text) => {
+                pending = text;
+                if (scrollRafRef.current) return;
+                scrollRafRef.current = requestAnimationFrame(() => {
+                    scrollRafRef.current = 0;
+                    if (pending === lastFlush) return;
+                    lastFlush = pending;
+                    setIsStreaming(true);
+                    setIsLoading(false);
+                    setMessages((prev) => {
+                        const next = [...prev];
+                        const last = next[next.length - 1];
+                        if (last?.role === 'assistant') {
+                            next[next.length - 1] = { ...last, content: lastFlush };
+                        }
+                        return next;
+                    });
+                });
             };
 
-            const requestCompletion = async (useWeb) => {
-                const body = {
+            const content = await streamChatCompletion({
+                apiKey: AI_API_KEY,
+                signal: controller.signal,
+                body: {
                     model: BASE_MODEL,
                     messages: apiMessages,
-                    temperature: 0.6,
-                    // Reasoning models burn tokens on thinking; leave room for the actual answer
-                    max_tokens: 2048,
-                    // Prefer a short final answer over long silent reasoning
-                    reasoning: { effort: 'low' },
-                };
+                    temperature: 0.5,
+                    max_tokens: MAX_COMPLETION_TOKENS,
+                    // Reduce hidden long thinking when the gateway supports it
+                    enable_thinking: false,
+                    thinking: { type: 'disabled' },
+                },
+                onDelta: flushStream,
+            });
 
-                if (useWeb) {
-                    // OpenRouter web plugin (Exa / native search — live results, not a local fact list)
-                    body.plugins = [{
-                        id: 'web',
-                        max_results: 5,
-                        search_prompt:
-                            'Live web results for this question (use these as the main facts; answer the user directly, do not mention searching):',
-                    }];
-                }
-
-                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-                    method: 'POST',
-                    headers,
-                    body: JSON.stringify(body),
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    console.error('API Error:', data);
-                    throw new Error(data.error?.message || `HTTP ${response.status}`);
-                }
-
-                return data;
-            };
-
-            // Try with live web first; if the model returns an empty box, retry without web
-            let data = await requestCompletion(true);
-            let content = extractAssistantContent(data.choices?.[0]?.message);
-
-            if (!content) {
-                console.warn('Empty assistant content with web search; retrying without plugins', data);
-                data = await requestCompletion(false);
-                content = extractAssistantContent(data.choices?.[0]?.message);
+            if (scrollRafRef.current) {
+                cancelAnimationFrame(scrollRafRef.current);
+                scrollRafRef.current = 0;
             }
 
-            if (!content) {
-                const finish = data.choices?.[0]?.finish_reason;
-                throw new Error(
-                    finish === 'length'
-                        ? 'The model ran out of tokens before writing an answer. Please try a shorter question.'
-                        : 'Neo got an empty reply from the model. Please try again in a moment.'
-                );
+            if (!content?.trim()) {
+                throw new Error('Neo got an empty reply from the model. Please try again in a moment.');
             }
 
-            setMessages((prev) => [...prev, { role: 'assistant', content }]);
+            setMessages((prev) => {
+                const next = [...prev];
+                const last = next[next.length - 1];
+                if (last?.role === 'assistant') {
+                    next[next.length - 1] = { ...last, content: content.trim() };
+                }
+                return next;
+            });
         } catch (error) {
+            if (error?.name === 'AbortError') return;
             console.error('Chat error:', error);
-            setMessages((prev) => [...prev, {
-                role: 'assistant',
-                content: `Error: ${error.message}. Please check your internet connection, OpenRouter credits (web search needs credits even on free models), or try again later.`
-            }]);
+            setMessages((prev) => {
+                const next = [...prev];
+                const last = next[next.length - 1];
+                const errText = `Error: ${error.message}. Please check your internet connection, API credits, or try again later.`;
+                if (last?.role === 'assistant' && !last.content) {
+                    next[next.length - 1] = { role: 'assistant', content: errText };
+                    return next;
+                }
+                return [...next, { role: 'assistant', content: errText }];
+            });
         } finally {
             setIsLoading(false);
+            setIsStreaming(false);
         }
     };
 
@@ -335,11 +448,10 @@ const ChatBot = () => {
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl shadow-lg flex items-center justify-center touch-manipulation transition-[transform,box-shadow,background-color] duration-300 ease-out ${
-                    isOpen
+                className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl shadow-lg flex items-center justify-center touch-manipulation transition-[transform,box-shadow,background-color] duration-300 ease-out ${isOpen
                         ? `${theme.closeButtonBg} rotate-90`
                         : `${theme.buttonBg} hover:shadow-xl sm:hover:scale-105`
-                } ${theme.buttonText}`}
+                    } ${theme.buttonText}`}
                 aria-label={isOpen ? 'Close Neo' : 'Open Neo'}
                 aria-expanded={isOpen}
             >
@@ -355,11 +467,10 @@ const ChatBot = () => {
             </button>
 
             <div
-                className={`absolute bottom-[3.5rem] sm:bottom-20 right-0 flex flex-col rounded-2xl shadow-2xl overflow-hidden transition-[opacity,transform] duration-300 ease-out ${
-                    isOpen
+                className={`absolute bottom-[3.5rem] sm:bottom-20 right-0 flex flex-col rounded-2xl shadow-2xl overflow-hidden transition-[opacity,transform] duration-300 ease-out ${isOpen
                         ? 'opacity-100 translate-y-0 scale-100 pointer-events-auto'
                         : 'opacity-0 translate-y-2 scale-95 pointer-events-none'
-                } ${theme.windowBg} ${theme.windowBorder}`}
+                    } ${theme.windowBg} ${theme.windowBorder}`}
                 style={{
                     // Fit any phone width (320px+) without clipping; cap on larger screens
                     width: 'min(24rem, calc(100vw - 2rem))',
@@ -381,7 +492,7 @@ const ChatBot = () => {
                         </div>
                         <div className="min-w-0">
                             <h3 className={`${theme.headerText} font-semibold text-sm sm:text-base`}>Neo</h3>
-                            <p className={`${theme.headerSubtext} text-[11px] sm:text-xs truncate`}>Powered by OpenRouter</p>
+                            <p className={`${theme.headerSubtext} text-[11px] sm:text-xs truncate`}>Powered by AI</p>
                         </div>
                     </div>
                 </div>
@@ -390,32 +501,39 @@ const ChatBot = () => {
                     className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-3 sm:p-4 space-y-3 sm:space-y-4"
                     style={{ WebkitOverflowScrolling: 'touch' }}
                 >
-                    {messages.map((msg, index) => (
-                        <div
-                            key={index}
-                            className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                        >
-                            <div className={`max-w-[85%] sm:max-w-[80%] px-3 py-2 sm:px-4 sm:py-2.5 text-[13px] sm:text-sm leading-relaxed break-words [overflow-wrap:anywhere] chat-msg-in ${
-                                msg.role === 'user'
-                                    ? `${theme.userMsgBg} ${theme.userMsgText} rounded-2xl rounded-br-md shadow-sm chat-msg-in-user whitespace-pre-wrap`
-                                    : `${theme.botMsgBg} ${theme.botMsgText} rounded-2xl rounded-bl-md ${theme.botMsgBorder}`
-                            }`}>
-                                {msg.role === 'assistant' ? (
-                                    <MarkdownMessage content={msg.content} />
-                                ) : (
-                                    msg.content
-                                )}
-                            </div>
-                        </div>
-                    ))}
+                    {messages.map((msg, index) => {
+                        const isLastAssistant =
+                            msg.role === 'assistant' && index === messages.length - 1;
+                        const showTyping = isLastAssistant && isLoading && !msg.content;
+                        const showCursor = isLastAssistant && isStreaming && msg.content;
 
-                    {isLoading && (
-                        <div className="flex justify-start">
-                            <div className={`max-w-[85%] sm:max-w-[80%] ${theme.botMsgBg} rounded-2xl rounded-bl-md ${theme.botMsgBorder} chat-msg-in`}>
-                                <TypingIndicator label="Thinking..." />
+                        return (
+                            <div
+                                key={index}
+                                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                            >
+                                <div className={`max-w-[85%] sm:max-w-[80%] px-3 py-2 sm:px-4 sm:py-2.5 text-[13px] sm:text-sm leading-relaxed break-words [overflow-wrap:anywhere] chat-msg-in ${msg.role === 'user'
+                                        ? `${theme.userMsgBg} ${theme.userMsgText} rounded-2xl rounded-br-md shadow-sm chat-msg-in-user whitespace-pre-wrap`
+                                        : `${theme.botMsgBg} ${theme.botMsgText} rounded-2xl rounded-bl-md ${theme.botMsgBorder}`
+                                    }`}>
+                                    {msg.role === 'assistant' ? (
+                                        showTyping ? (
+                                            <TypingIndicator label="Typing..." />
+                                        ) : (
+                                            <>
+                                                <MarkdownMessage content={msg.content || ' '} />
+                                                {showCursor && (
+                                                    <span className="inline-block w-1.5 h-3.5 ml-0.5 align-middle bg-orange-400/80 animate-pulse" aria-hidden />
+                                                )}
+                                            </>
+                                        )
+                                    ) : (
+                                        msg.content
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    )}
+                        );
+                    })}
                     <div ref={messagesEndRef} />
                 </div>
 

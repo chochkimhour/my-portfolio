@@ -61,12 +61,14 @@ export const getRagContext = () => {
             .join("\n");
     }).join("\n");
 
+    // Keep experience short so every chat turn stays fast (long prompts = slower TTFT)
     const experienceBlock = EXPERIENCE.map((exp, index) => {
         const period = formatPeriod(exp.startDate, exp.endDate);
         const bullets = exp.description
             .split("\n")
             .map((line) => line.trim())
             .filter(Boolean)
+            .slice(0, 2)
             .map((line) => `   - ${line}`)
             .join("\n");
 
@@ -79,7 +81,7 @@ export const getRagContext = () => {
     }).join("\n\n");
 
     const servicesBlock = SERVICES.map(
-        (service) => `- ${service.title}: ${service.description}`
+        (service) => `- ${service.title}`
     ).join("\n");
 
     return `

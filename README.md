@@ -7,7 +7,7 @@
 ![Type](https://img.shields.io/badge/Type-ESM%20JavaScript-F7DF1E?logo=javascript&logoColor=000000)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 
-A production-ready personal portfolio website built with React, Vite, Tailwind CSS, and Docker. The application presents professional experience, services, featured projects, contact links, and Neo — an interactive portfolio chatbot with live web research.
+A production-ready personal portfolio website built with React, Vite, Tailwind CSS, and Docker. The application presents professional experience, services, featured projects, contact links, and Neo — an interactive portfolio chatbot.
 
 ## Overview
 
@@ -18,7 +18,7 @@ This project is designed as a fast, responsive, and maintainable portfolio appli
 - Responsive single-page portfolio experience
 - Professional sections for hero, about, services, experience, projects, and contact
 - Environment-driven personal information and social links
-- Neo chatbot with live web research (OpenRouter)
+- Neo chatbot powered by an OpenAI-compatible API
 - Light and dark theme support
 - Vite development server with fast refresh
 - Docker and Docker Compose support for local development
@@ -68,12 +68,20 @@ Use `.env.example` as the complete list of supported variables. The main groups 
 
 Keep `.env` local for development. For GitHub Pages deployment, configure the same public values as GitHub Actions repository variables so Vite can compile those values into the static site without committing env files.
 
-### Neo chatbot API key (OpenRouter)
+### Neo chatbot API (OpenAI-compatible)
+
+Default provider base: `https://api.iamhc.cn/v1`, model: `auto`.
+
+| Variable | Purpose |
+|----------|---------|
+| `VITE_AI_API_KEY` | API key (required) |
+| `VITE_AI_BASE_URL` | Base URL including `/v1` (default `https://api.iamhc.cn/v1`) |
+| `VITE_AI_MODEL` | Model id (default `auto`) |
 
 | Where | How |
 |-------|-----|
-| Local | Put `VITE_OPENROUTER_API_KEY=...` in private `.env` (gitignored) |
-| Deploy (CI) | Repo **Settings → Secrets and variables → Actions** → secret name **`VITE_OPENROUTER_API_KEY`** |
+| Local | Set the vars above in private `.env` (gitignored) |
+| Deploy (CI) | Repo **Settings → Secrets and variables → Actions** → secret **`VITE_AI_API_KEY`** |
 
 The CI workflow injects that secret only during `npm run build`. Never commit a real key in `.env.production` or the repo.
 

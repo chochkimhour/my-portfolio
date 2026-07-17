@@ -49,8 +49,10 @@ jobs:
         run: npm run build
         env:
           # Injected only at build time from GitHub Actions secrets (never commit real keys).
-          # Create secret: Settings → Secrets and variables → Actions → VITE_OPENROUTER_API_KEY
-          VITE_OPENROUTER_API_KEY: ${{ secrets.VITE_OPENROUTER_API_KEY }}
+          # Create secret: Settings → Secrets and variables → Actions → VITE_AI_API_KEY
+          VITE_AI_API_KEY: ${{ secrets.VITE_AI_API_KEY }}
+          VITE_AI_BASE_URL: https://api.iamhc.cn/v1
+          VITE_AI_MODEL: auto
 
       - name: Configure GitHub Pages
         if: github.event_name == 'push'
