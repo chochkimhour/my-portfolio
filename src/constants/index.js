@@ -1,5 +1,7 @@
 const env = import.meta.env;
 const fromEnv = (key, fallback) => env[key] || fallback;
+// Like fromEnv, but an explicitly empty value stays empty
+const fromEnvOptional = (key, fallback) => env[key] ?? fallback;
 const fromEnvList = (key, fallback) =>
     fromEnv(key, fallback.join(","))
         .split(",")
@@ -157,20 +159,27 @@ export const EXPERIENCE = [
         role: fromEnv("EXPERIENCE_1_ROLE", "Role Title"),
         startDate: fromEnv("EXPERIENCE_1_START_DATE", "2025-01-01"),
         endDate: fromEnv("EXPERIENCE_1_END_DATE", ""),
-        description: fromEnv("EXPERIENCE_1_DESCRIPTION", "Describe your current role and impact.")
+        description: fromEnvOptional("EXPERIENCE_1_DESCRIPTION", "Describe your current role and impact.")
     },
     {
         company: fromEnv("EXPERIENCE_2_COMPANY", "Company Name"),
         role: fromEnv("EXPERIENCE_2_ROLE", "Role Title"),
         startDate: fromEnv("EXPERIENCE_2_START_DATE", "2024-01-01"),
         endDate: fromEnv("EXPERIENCE_2_END_DATE", "2024-12-01"),
-        description: fromEnv("EXPERIENCE_2_DESCRIPTION", "Describe your previous role and impact.")
+        description: fromEnvOptional("EXPERIENCE_2_DESCRIPTION", "Describe your previous role and impact.")
     },
     {
         company: fromEnv("EXPERIENCE_3_COMPANY", "Company Name"),
         role: fromEnv("EXPERIENCE_3_ROLE", "Role Title"),
         startDate: fromEnv("EXPERIENCE_3_START_DATE", "2024-01-01"),
         endDate: fromEnv("EXPERIENCE_3_END_DATE", "2024-06-01"),
-        description: fromEnv("EXPERIENCE_3_DESCRIPTION", "Describe your earlier role and impact.")
+        description: fromEnvOptional("EXPERIENCE_3_DESCRIPTION", "Describe your earlier role and impact.")
+    },
+    {
+        company: fromEnv("EXPERIENCE_4_COMPANY", "Company Name"),
+        role: fromEnv("EXPERIENCE_4_ROLE", "Role Title"),
+        startDate: fromEnv("EXPERIENCE_4_START_DATE", "2023-06-01"),
+        endDate: fromEnv("EXPERIENCE_4_END_DATE", "2023-12-01"),
+        description: fromEnvOptional("EXPERIENCE_4_DESCRIPTION", "Describe your earliest role and impact.")
     }
 ];
